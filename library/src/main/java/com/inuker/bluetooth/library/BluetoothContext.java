@@ -31,4 +31,10 @@ public class BluetoothContext {
         }
         mHandler.postDelayed(runnable, delayInMillis);
     }
+
+    public static void checkMainThread() {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            throw new RuntimeException();
+        }
+    }
 }

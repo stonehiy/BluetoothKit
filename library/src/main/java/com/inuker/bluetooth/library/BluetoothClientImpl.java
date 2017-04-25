@@ -95,7 +95,7 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
 
     private volatile static IBluetoothClient sInstance;
 
-    private CountDownLatch mCountDownLatch;
+    private volatile CountDownLatch mCountDownLatch;
 
     private HandlerThread mWorkerThread;
     private Handler mWorkerHandler;
@@ -114,10 +114,10 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
 
         mWorkerHandler = new Handler(mWorkerThread.getLooper(), this);
 
-        mNotifyResponses = new HashMap<String, HashMap<String, List<BleNotifyResponse>>>();
-        mConnectStatusListeners = new HashMap<String, List<BleConnectStatusListener>>();
-        mBluetoothStateListeners = new LinkedList<BluetoothStateListener>();
-        mBluetoothBondListeners = new LinkedList<BluetoothBondListener>();
+        mNotifyResponses = new HashMap<>();
+        mConnectStatusListeners = new HashMap<>();
+        mBluetoothStateListeners = new LinkedList<>();
+        mBluetoothBondListeners = new LinkedList<>();
 
         mWorkerHandler.obtainMessage(MSG_REG_RECEIVER).sendToTarget();
 
@@ -136,72 +136,14 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
         return sInstance;
     }
 
-    private IBluetoothService getBluetoothService() {
-//        BluetoothLog.v(String.format("getBluetoothService"));
-        if (mBluetoothService == null) {
-            bindServiceSync();
-        }
-        return mBluetoothService;
-    }
-
-    private void bindServiceSync() {
-        checkRuntime(true);
-
-//        BluetoothLog.v(String.format("bindServiceSync"));
-
-        mCountDownLatch = new CountDownLatch(1);
-
-        Intent intent = new Intent();
-        intent.setClass(mContext, BluetoothService.class);
-
-        if (mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)) {
-//            BluetoothLog.v(String.format("BluetoothService registered"));
-            waitBluetoothManagerReady();
-        } else {
-//            BluetoothLog.v(String.format("BluetoothService not registered"));
-            mBluetoothService = BluetoothServiceImpl.getInstance();
-        }
-    }
-
-    private final ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-//            BluetoothLog.v(String.format("onServiceConnected"));
-            mBluetoothService = IBluetoothService.Stub.asInterface(service);
-            notifyBluetoothManagerReady();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-//            BluetoothLog.v(String.format("onServiceDisconnected"));
-            mBluetoothService = null;
-        }
-    };
-
     @Override
     public void connect(String mac, BleConnectOptions options, final BleConnectResponse response) {
-        Bundle args = new Bundle();
-        args.putString(EXTRA_MAC, mac);
-        args.putParcelable(EXTRA_OPTIONS, options);
-        safeCallBluetoothApi(CODE_CONNECT, args, new BluetoothResponse() {
-            @Override
-            protected void onAsyncResponse(int code, Bundle data) {
-                checkRuntime(true);
-                if (response != null) {
-                    data.setClassLoader(getClass().getClassLoader());
-                    BleGattProfile profile = data.getParcelable(EXTRA_GATT_PROFILE);
-                    response.onResponse(code, profile);
-                }
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void disconnect(String mac) {
-        Bundle args = new Bundle();
-        args.putString(EXTRA_MAC, mac);
-        safeCallBluetoothApi(CODE_DISCONNECT, args, null);
-        clearNotifyListener(mac);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -228,92 +170,27 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
 
     @Override
     public void read(String mac, UUID service, UUID character, final BleReadResponse response) {
-        Bundle args = new Bundle();
-        args.putString(EXTRA_MAC, mac);
-        args.putSerializable(EXTRA_SERVICE_UUID, service);
-        args.putSerializable(EXTRA_CHARACTER_UUID, character);
-        safeCallBluetoothApi(CODE_READ, args, new BluetoothResponse() {
-            @Override
-            protected void onAsyncResponse(int code, Bundle data) {
-                checkRuntime(true);
-                if (response != null) {
-                    response.onResponse(code, data.getByteArray(EXTRA_BYTE_VALUE));
-                }
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void write(String mac, UUID service, UUID character, byte[] value, final BleWriteResponse response) {
-        Bundle args = new Bundle();
-        args.putString(EXTRA_MAC, mac);
-        args.putSerializable(EXTRA_SERVICE_UUID, service);
-        args.putSerializable(EXTRA_CHARACTER_UUID, character);
-        args.putByteArray(EXTRA_BYTE_VALUE, value);
-        safeCallBluetoothApi(CODE_WRITE, args, new BluetoothResponse() {
-            @Override
-            protected void onAsyncResponse(int code, Bundle data) {
-                checkRuntime(true);
-                if (response != null) {
-                    response.onResponse(code);
-                }
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void readDescriptor(String mac, UUID service, UUID character, UUID descriptor, final BleReadResponse response) {
-        Bundle args = new Bundle();
-        args.putString(EXTRA_MAC, mac);
-        args.putSerializable(EXTRA_SERVICE_UUID, service);
-        args.putSerializable(EXTRA_CHARACTER_UUID, character);
-        args.putSerializable(EXTRA_DESCRIPTOR_UUID, descriptor);
-        safeCallBluetoothApi(CODE_READ_DESCRIPTOR, args, new BluetoothResponse() {
-            @Override
-            protected void onAsyncResponse(int code, Bundle data) {
-                checkRuntime(true);
-                if (response != null) {
-                    response.onResponse(code, data.getByteArray(EXTRA_BYTE_VALUE));
-                }
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void writeDescriptor(String mac, UUID service, UUID character, UUID descriptor, byte[] value, final BleWriteResponse response) {
-        Bundle args = new Bundle();
-        args.putString(EXTRA_MAC, mac);
-        args.putSerializable(EXTRA_SERVICE_UUID, service);
-        args.putSerializable(EXTRA_CHARACTER_UUID, character);
-        args.putSerializable(EXTRA_DESCRIPTOR_UUID, descriptor);
-        args.putByteArray(EXTRA_BYTE_VALUE, value);
-        safeCallBluetoothApi(CODE_WRITE_DESCRIPTOR, args, new BluetoothResponse() {
-            @Override
-            protected void onAsyncResponse(int code, Bundle data) {
-                checkRuntime(true);
-                if (response != null) {
-                    response.onResponse(code);
-                }
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void writeNoRsp(String mac, UUID service, UUID character, byte[] value, final BleWriteResponse response) {
-        Bundle args = new Bundle();
-        args.putString(EXTRA_MAC, mac);
-        args.putSerializable(EXTRA_SERVICE_UUID, service);
-        args.putSerializable(EXTRA_CHARACTER_UUID, character);
-        args.putByteArray(EXTRA_BYTE_VALUE, value);
-        safeCallBluetoothApi(CODE_WRITE_NORSP, args, new BluetoothResponse() {
-            @Override
-            protected void onAsyncResponse(int code, Bundle data) {
-                checkRuntime(true);
-                if (response != null) {
-                    response.onResponse(code);
-                }
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 
     private void saveNotifyListener(String mac, UUID service, UUID character, BleNotifyResponse response) {
@@ -525,26 +402,39 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
         safeCallBluetoothApi(CODE_REFRESH_CACHE, args, null);
     }
 
-    private void safeCallBluetoothApi(int code, Bundle args, final BluetoothResponse response) {
+    private IBluetoothService getBluetoothService() {
+        checkRuntime(true);
+        while (mBluetoothService == null) {
+            bindServiceSync();
+        }
+        return mBluetoothService;
+    }
+
+    private void bindServiceSync() {
         checkRuntime(true);
 
-//        BluetoothLog.v(String.format("safeCallBluetoothApi code = %d", code));
+        Intent intent = new Intent();
+        intent.setClass(mContext, BluetoothService.class);
 
-        try {
-            IBluetoothService service = getBluetoothService();
-
-//            BluetoothLog.v(String.format("IBluetoothService = %s", service));
-
-            if (service != null) {
-                args = (args != null ? args : new Bundle());
-                service.callBluetoothApi(code, args, response);
-            } else {
-                response.onResponse(SERVICE_UNREADY, null);
-            }
-        } catch (Throwable e) {
-            BluetoothLog.e(e);
+        if (mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)) {
+            waitBluetoothManagerReady();
+        } else {
+            mBluetoothService = BluetoothServiceImpl.getInstance();
         }
     }
+
+    private final ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBluetoothService = IBluetoothService.Stub.asInterface(service);
+            notifyBluetoothManagerReady();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mBluetoothService = null;
+        }
+    };
 
     @Override
     public boolean onIntercept(final Object object, final Method method, final Object[] args) {
@@ -554,16 +444,17 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
     }
 
     private void notifyBluetoothManagerReady() {
-//        BluetoothLog.v(String.format("notifyBluetoothManagerReady %s", mCountDownLatch));
-
-        if (mCountDownLatch != null) {
-            mCountDownLatch.countDown();
-            mCountDownLatch = null;
+        if (mCountDownLatch == null) {
+            throw new IllegalStateException();
         }
+        mCountDownLatch.countDown();
+        mCountDownLatch = null;
     }
 
     private void waitBluetoothManagerReady() {
-//        BluetoothLog.v(String.format("waitBluetoothManagerReady %s", mCountDownLatch));
+        if (mCountDownLatch == null) {
+            mCountDownLatch = new CountDownLatch(1);
+        }
         try {
             mCountDownLatch.await();
         } catch (InterruptedException e) {
@@ -571,11 +462,29 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
         }
     }
 
+    private void safeCallRemote(Method method, Object[] args) {
+        checkRuntime(true);
+
+        IBluetoothService service = getBluetoothService();
+
+        if (service != null) {
+            try {
+                Method remoteMethod = IBluetoothService.class.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                remoteMethod.setAccessible(true);
+                remoteMethod.invoke(service, args);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case MSG_INVOKE_PROXY:
-                ProxyBulk.safeInvoke(msg.obj);
+                ProxyBulk b = (ProxyBulk) msg.obj;
+                safeCallRemote(b.method, b.args);
+
                 break;
             case MSG_REG_RECEIVER:
                 registerBluetoothReceiver();
