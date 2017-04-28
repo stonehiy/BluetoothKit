@@ -1,66 +1,34 @@
 package com.inuker.bluetooth.library;
 
-import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
-import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
-import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
-import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
-import com.inuker.bluetooth.library.connect.response.BleReadResponse;
-import com.inuker.bluetooth.library.connect.response.BleReadRssiResponse;
-import com.inuker.bluetooth.library.connect.response.BleUnnotifyResponse;
-import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
-import com.inuker.bluetooth.library.receiver.listener.BluetoothBondListener;
-import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
-import com.inuker.bluetooth.library.search.SearchRequest;
-import com.inuker.bluetooth.library.search.response.SearchResponse;
 
-import java.util.UUID;
+import android.os.ParcelUuid;
+
+import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 
 /**
  * Created by dingjikerbo on 2016/8/25.
  */
 public interface IBluetoothClient {
 
-    void connect(String mac, BleConnectOptions options, BleConnectResponse response);
+	void connect(String mac, BleConnectOptions options, IResponse response);
 
-    void disconnect(String mac);
+	void disconnect(String mac);
 
-    void registerConnectStatusListener(String mac, BleConnectStatusListener listener);
+	void read(String mac, ParcelUuid service, ParcelUuid character, IResponse response);
 
-    void unregisterConnectStatusListener(String mac, BleConnectStatusListener listener);
+	void write(String mac, ParcelUuid service, ParcelUuid character, byte[] value, IResponse response);
 
-    void read(String mac, UUID service, UUID character, BleReadResponse response);
+	void readDescriptor(String mac, ParcelUuid service, ParcelUuid character, ParcelUuid descriptor, IResponse response);
 
-    void write(String mac, UUID service, UUID character, byte[] value, BleWriteResponse response);
+	void writeDescriptor(String mac, ParcelUuid service, ParcelUuid character, ParcelUuid descriptor, byte[] value, IResponse response);
 
-    void readDescriptor(String mac, UUID service, UUID character, UUID descriptor, BleReadResponse response);
+	void notify(String mac, ParcelUuid service, ParcelUuid character, IResponse response);
 
-    void writeDescriptor(String mac, UUID service, UUID character, UUID descriptor, byte[] value, BleWriteResponse response);
+	void unnotify(String mac, ParcelUuid service, ParcelUuid character, IResponse response);
 
-    void writeNoRsp(String mac, UUID service, UUID character, byte[] value, BleWriteResponse response);
+	void indicate(String mac, ParcelUuid service, ParcelUuid character, IResponse response);
 
-    void notify(String mac, UUID service, UUID character, BleNotifyResponse response);
+	void unindicate(String mac, ParcelUuid service, ParcelUuid character, IResponse response);
 
-    void unnotify(String mac, UUID service, UUID character, BleUnnotifyResponse response);
-
-    void indicate(String mac, UUID service, UUID character, BleNotifyResponse response);
-
-    void unindicate(String mac, UUID service, UUID character, BleUnnotifyResponse response);
-
-    void readRssi(String mac, BleReadRssiResponse response);
-
-    void search(SearchRequest request, SearchResponse response);
-
-    void stopSearch();
-
-    void registerBluetoothStateListener(BluetoothStateListener listener);
-
-    void unregisterBluetoothStateListener(BluetoothStateListener listener);
-
-    void registerBluetoothBondListener(BluetoothBondListener listener);
-
-    void unregisterBluetoothBondListener(BluetoothBondListener listener);
-
-    void clearRequest(String mac, int type);
-
-    void refreshCache(String mac);
+	void readRssi(String mac, IResponse response);
 }

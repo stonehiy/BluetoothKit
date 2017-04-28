@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * Created by dingjikerbo on 2016/8/28.
  */
-public interface BleNotifyResponse extends BleResponse {
+public interface BleNotifyResponse extends BleTResponse<Void> {
 
     void onNotify(UUID service, UUID character, byte[] value);
 }

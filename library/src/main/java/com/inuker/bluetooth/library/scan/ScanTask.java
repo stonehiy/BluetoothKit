@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.search;
+package com.inuker.bluetooth.library.scan;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by dingjikerbo on 2016/8/28.
  */
-public class SearchTask implements Parcelable {
+public class ScanTask implements Parcelable {
 
     private int searchType;
     private int searchDuration;
@@ -22,7 +22,7 @@ public class SearchTask implements Parcelable {
         dest.writeInt(this.searchDuration);
     }
 
-    public SearchTask() {
+    public ScanTask() {
     }
 
     public int getSearchType() {
@@ -41,18 +41,18 @@ public class SearchTask implements Parcelable {
         this.searchDuration = searchDuration;
     }
 
-    protected SearchTask(Parcel in) {
+    protected ScanTask(Parcel in) {
         this.searchType = in.readInt();
         this.searchDuration = in.readInt();
     }
 
-    public static final Creator<SearchTask> CREATOR = new Creator<SearchTask>() {
-        public SearchTask createFromParcel(Parcel source) {
-            return new SearchTask(source);
+    public static final Creator<ScanTask> CREATOR = new Creator<ScanTask>() {
+        public ScanTask createFromParcel(Parcel source) {
+            return new ScanTask(source);
         }
 
-        public SearchTask[] newArray(int size) {
-            return new SearchTask[size];
+        public ScanTask[] newArray(int size) {
+            return new ScanTask[size];
         }
     };
 }

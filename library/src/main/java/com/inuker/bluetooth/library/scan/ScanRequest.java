@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.search;
+package com.inuker.bluetooth.library.scan;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,9 +14,9 @@ import static com.inuker.bluetooth.library.Constants.SEARCH_TYPE_CLASSIC;
 /**
  * Created by dingjikerbo on 2016/8/28.
  */
-public class SearchRequest implements Parcelable {
+public class ScanRequest implements Parcelable {
 
-    private List<SearchTask> tasks;
+    private List<ScanTask> tasks;
 
     @Override
     public int describeContents() {
@@ -28,42 +28,42 @@ public class SearchRequest implements Parcelable {
         dest.writeTypedList(tasks);
     }
 
-    public SearchRequest() {
+    public ScanRequest() {
     }
 
-    protected SearchRequest(Parcel in) {
-        this.tasks = new ArrayList<SearchTask>();
-        in.readTypedList(this.tasks, SearchTask.CREATOR);
+    protected ScanRequest(Parcel in) {
+        this.tasks = new ArrayList<ScanTask>();
+        in.readTypedList(this.tasks, ScanTask.CREATOR);
     }
 
-    public static final Creator<SearchRequest> CREATOR = new Creator<SearchRequest>() {
-        public SearchRequest createFromParcel(Parcel source) {
-            return new SearchRequest(source);
+    public static final Creator<ScanRequest> CREATOR = new Creator<ScanRequest>() {
+        public ScanRequest createFromParcel(Parcel source) {
+            return new ScanRequest(source);
         }
 
-        public SearchRequest[] newArray(int size) {
-            return new SearchRequest[size];
+        public ScanRequest[] newArray(int size) {
+            return new ScanRequest[size];
         }
     };
 
-    public List<SearchTask> getTasks() {
+    public List<ScanTask> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<SearchTask> tasks) {
+    public void setTasks(List<ScanTask> tasks) {
         this.tasks = tasks;
     }
 
     public static class Builder {
-        private List<SearchTask> tasks;
+        private List<ScanTask> tasks;
 
         public Builder() {
-            tasks = new ArrayList<SearchTask>();
+            tasks = new ArrayList<ScanTask>();
         }
 
         public Builder searchBluetoothLeDevice(int duration) {
             if (BluetoothUtils.isBleSupported()) {
-                SearchTask search = new SearchTask();
+                ScanTask search = new ScanTask();
                 search.setSearchType(SEARCH_TYPE_BLE);
                 search.setSearchDuration(duration);
                 tasks.add(search);
@@ -79,7 +79,7 @@ public class SearchRequest implements Parcelable {
         }
 
         public Builder searchBluetoothClassicDevice(int duration) {
-            SearchTask search = new SearchTask();
+            ScanTask search = new ScanTask();
             search.setSearchType(SEARCH_TYPE_CLASSIC);
             search.setSearchDuration(duration);
             tasks.add(search);
@@ -93,8 +93,8 @@ public class SearchRequest implements Parcelable {
             return this;
         }
 
-        public SearchRequest build() {
-            SearchRequest group = new SearchRequest();
+        public ScanRequest build() {
+            ScanRequest group = new ScanRequest();
             group.setTasks(tasks);
             return group;
         }

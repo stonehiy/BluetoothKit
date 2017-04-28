@@ -1,6 +1,4 @@
-package com.inuker.bluetooth.library.search;
-
-import com.inuker.bluetooth.library.search.response.BluetoothSearchResponse;
+package com.inuker.bluetooth.library.scan;
 
 /**
  * Created by dingjikerbo on 2016/8/28.

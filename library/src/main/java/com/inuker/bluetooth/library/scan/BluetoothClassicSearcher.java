@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.search.classic;
+package com.inuker.bluetooth.library.scan;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -6,9 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import com.inuker.bluetooth.library.search.BluetoothSearcher;
-import com.inuker.bluetooth.library.search.SearchResult;
-import com.inuker.bluetooth.library.search.response.BluetoothSearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothUtils;
 
 /**
@@ -94,7 +91,7 @@ public class BluetoothClassicSearcher extends BluetoothSearcher {
 				int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,
 						Short.MIN_VALUE);
 
-				SearchResult xmDevice = new SearchResult(device,
+				ScanResult xmDevice = new ScanResult(device,
 						rssi, null);
 
 				notifyDeviceFounded(xmDevice);

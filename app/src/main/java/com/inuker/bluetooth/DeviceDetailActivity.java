@@ -14,11 +14,9 @@ import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
-import com.inuker.bluetooth.library.search.SearchResult;
+import com.inuker.bluetooth.library.scan.ScanResult;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.BluetoothUtils;
-import com.xiaomi.smarthome.mibtservice.library.channel.Channel;
-import com.xiaomi.smarthome.mibtservice.library.channel.ChannelCallback;
 
 import static com.inuker.bluetooth.library.Constants.*;
 
@@ -35,7 +33,7 @@ public class DeviceDetailActivity extends Activity {
     private ListView mListView;
     private DeviceDetailAdapter mAdapter;
 
-    private SearchResult mResult;
+    private ScanResult mResult;
 
     private BluetoothDevice mDevice;
 
@@ -75,7 +73,7 @@ public class DeviceDetailActivity extends Activity {
             }
         });
 
-        ClientManager.getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+//        ClientManager.getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
 
         connectDeviceIfNeeded();
     }
@@ -126,19 +124,6 @@ public class DeviceDetailActivity extends Activity {
         });
     }
 
-    private class MyChannel extends Channel {
-
-        @Override
-        public void write(byte[] bytes, ChannelCallback channelCallback) {
-
-        }
-
-        @Override
-        public void onRecv(byte[] bytes) {
-
-        }
-    }
-
     private void connectDeviceIfNeeded() {
         if (!mConnected) {
             connectDevice();
@@ -148,7 +133,7 @@ public class DeviceDetailActivity extends Activity {
     @Override
     protected void onDestroy() {
         ClientManager.getClient().disconnect(mDevice.getAddress());
-        ClientManager.getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+//        ClientManager.getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
         super.onDestroy();
     }
 }

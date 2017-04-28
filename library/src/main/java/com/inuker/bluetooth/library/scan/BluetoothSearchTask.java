@@ -1,10 +1,8 @@
-package com.inuker.bluetooth.library.search;
+package com.inuker.bluetooth.library.scan;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-
-import com.inuker.bluetooth.library.search.response.BluetoothSearchResponse;
 
 import static com.inuker.bluetooth.library.Constants.SEARCH_TYPE_BLE;
 import static com.inuker.bluetooth.library.Constants.SEARCH_TYPE_CLASSIC;
@@ -21,7 +19,7 @@ public class BluetoothSearchTask implements Handler.Callback {
 
 	private Handler mHandler;
 
-	public BluetoothSearchTask(SearchTask task) {
+	public BluetoothSearchTask(ScanTask task) {
 		setSearchType(task.getSearchType());
 		setSearchDuration(task.getSearchDuration());
 		mHandler = new Handler(Looper.myLooper(), this);

@@ -33,12 +33,12 @@ public class BluetoothServiceImpl extends IBluetoothService.Stub {
 
     @Override
     public void connect(String mac, BleConnectOptions options, IResponse response) throws RemoteException {
+        BluetoothContext.checkMainThread();
         BleConnectManager.connect(mac, options, new BleGeneralResponse(response));
     }
 
     @Override
     public void disconnect(String mac) throws RemoteException {
-        BluetoothContext.checkMainThread();
         BleConnectManager.disconnect(mac);
     }
 
@@ -50,11 +50,6 @@ public class BluetoothServiceImpl extends IBluetoothService.Stub {
     @Override
     public void write(String mac, ParcelUuid service, ParcelUuid character, byte[] value, IResponse response) throws RemoteException {
         BleConnectManager.write(mac, service.getUuid(), character.getUuid(), value, new BleGeneralResponse(response));
-    }
-
-    @Override
-    public void writeNoRsp(String mac, ParcelUuid service, ParcelUuid character, byte[] value, IResponse response) throws RemoteException {
-        BleConnectManager.writeNoRsp(mac, service.getUuid(), character.getUuid(), value, new BleGeneralResponse(response));
     }
 
     @Override

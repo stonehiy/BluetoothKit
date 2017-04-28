@@ -17,8 +17,6 @@ interface IBluetoothService {
 
     void write(String mac, in ParcelUuid service, in ParcelUuid character, in byte[] value, IResponse response);
 
-    void writeNoRsp(String mac, in ParcelUuid service, in ParcelUuid character, in byte[] value, IResponse response);
-
     void readDescriptor(String mac, in ParcelUuid service, in ParcelUuid character, in ParcelUuid descriptor, IResponse response);
 
     void writeDescriptor(String mac, in ParcelUuid service, in ParcelUuid character, in ParcelUuid descriptor, in byte[] value, IResponse response);
@@ -32,5 +30,7 @@ interface IBluetoothService {
     void unindicate(String mac, in ParcelUuid service, in ParcelUuid character, IResponse response);
 
     void readRssi(String mac, IResponse response);
+
+    void scan(ScanRequest request, ScanResponse response);
 
 }

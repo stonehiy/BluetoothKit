@@ -83,8 +83,9 @@ public class CharacterActivity extends Activity implements View.OnClickListener 
     };
 
     private final BleWriteResponse mWriteRsp = new BleWriteResponse() {
+
         @Override
-        public void onResponse(int code) {
+        public void onResponse(int code, Void data) {
             if (code == REQUEST_SUCCESS) {
                 CommonUtils.toast("success");
             } else {
@@ -95,14 +96,7 @@ public class CharacterActivity extends Activity implements View.OnClickListener 
 
     private final BleNotifyResponse mNotifyRsp = new BleNotifyResponse() {
         @Override
-        public void onNotify(UUID service, UUID character, byte[] value) {
-            if (service.equals(mService) && character.equals(mCharacter)) {
-                mBtnNotify.setText(String.format("%s", ByteUtils.byteToString(value)));
-            }
-        }
-
-        @Override
-        public void onResponse(int code) {
+        public void onResponse(int code, Void data) {
             if (code == REQUEST_SUCCESS) {
                 mBtnNotify.setEnabled(false);
                 mBtnUnnotify.setEnabled(true);
@@ -111,11 +105,19 @@ public class CharacterActivity extends Activity implements View.OnClickListener 
                 CommonUtils.toast("failed");
             }
         }
+
+        @Override
+        public void onNotify(UUID service, UUID character, byte[] value) {
+            if (service.equals(mService) && character.equals(mCharacter)) {
+                mBtnNotify.setText(String.format("%s", ByteUtils.byteToString(value)));
+            }
+        }
+
     };
 
     private final BleUnnotifyResponse mUnnotifyRsp = new BleUnnotifyResponse() {
         @Override
-        public void onResponse(int code) {
+        public void onResponse(int code, Void data) {
             if (code == REQUEST_SUCCESS) {
                 CommonUtils.toast("success");
                 mBtnNotify.setEnabled(true);
@@ -171,12 +173,12 @@ public class CharacterActivity extends Activity implements View.OnClickListener 
     @Override
     protected void onResume() {
         super.onResume();
-        ClientManager.getClient().registerConnectStatusListener(mMac, mConnectStatusListener);
+//        ClientManager.getClient().registerConnectStatusListener(mMac, mConnectStatusListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        ClientManager.getClient().unregisterConnectStatusListener(mMac, mConnectStatusListener);
+//        ClientManager.getClient().unregisterConnectStatusListener(mMac, mConnectStatusListener);
     }
 }
