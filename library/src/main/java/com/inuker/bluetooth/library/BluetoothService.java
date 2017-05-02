@@ -6,13 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.os.Looper;
 
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.proxy.ProxyBulk;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
 /**

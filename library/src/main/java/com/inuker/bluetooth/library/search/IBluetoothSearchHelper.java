@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.scan;
+package com.inuker.bluetooth.library.search;
 
 /**
  * Created by dingjikerbo on 2016/8/28.

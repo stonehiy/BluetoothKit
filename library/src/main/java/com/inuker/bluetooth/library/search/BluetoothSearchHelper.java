@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.scan;
+package com.inuker.bluetooth.library.search;
 
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -69,7 +69,7 @@ public class BluetoothSearchHelper implements IBluetoothSearchHelper, ProxyInter
         }
 
         @Override
-        public void onDeviceFounded(ScanResult device) {
+        public void onDeviceFounded(SearchResult device) {
             response.onDeviceFounded(device);
         }
 

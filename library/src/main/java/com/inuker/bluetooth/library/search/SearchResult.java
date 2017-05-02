@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.scan;
+package com.inuker.bluetooth.library.search;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Parcel;
@@ -8,7 +8,7 @@ import android.text.TextUtils;
 /**
  * Created by dingjikerbo on 2016/8/28.
  */
-public class ScanResult implements Parcelable {
+public class SearchResult implements Parcelable {
 
     public BluetoothDevice device;
 
@@ -16,11 +16,11 @@ public class ScanResult implements Parcelable {
 
     public byte[] scanRecord;
 
-    public ScanResult(BluetoothDevice device) {
+    public SearchResult(BluetoothDevice device) {
         this(device, 0, null);
     }
 
-    public ScanResult(BluetoothDevice device, int rssi, byte[] scanRecord) {
+    public SearchResult(BluetoothDevice device, int rssi, byte[] scanRecord) {
         this.device = device;
         this.rssi = rssi;
         this.scanRecord = scanRecord;
@@ -55,19 +55,19 @@ public class ScanResult implements Parcelable {
         dest.writeByteArray(this.scanRecord);
     }
 
-    public ScanResult(Parcel in) {
+    public SearchResult(Parcel in) {
         this.device = in.readParcelable(BluetoothDevice.class.getClassLoader());
         this.rssi = in.readInt();
         this.scanRecord = in.createByteArray();
     }
 
-    public static final Creator<ScanResult> CREATOR = new Creator<ScanResult>() {
-        public ScanResult createFromParcel(Parcel source) {
-            return new ScanResult(source);
+    public static final Creator<SearchResult> CREATOR = new Creator<SearchResult>() {
+        public SearchResult createFromParcel(Parcel source) {
+            return new SearchResult(source);
         }
 
-        public ScanResult[] newArray(int size) {
-            return new ScanResult[size];
+        public SearchResult[] newArray(int size) {
+            return new SearchResult[size];
         }
     };
 
@@ -76,7 +76,7 @@ public class ScanResult implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ScanResult that = (ScanResult) o;
+        SearchResult that = (SearchResult) o;
 
         return device.equals(that.device);
 

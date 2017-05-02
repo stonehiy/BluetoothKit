@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.scan;
+package com.inuker.bluetooth.library.search;
 
 import android.bluetooth.BluetoothAdapter;
 
@@ -43,7 +43,7 @@ public class BluetoothSearcher {
 		}
 	}
 
-	protected void notifyDeviceFounded(ScanResult device) {
+	protected void notifyDeviceFounded(SearchResult device) {
 		if (mSearchResponse != null) {
 			mSearchResponse.onDeviceFounded(device);
 		}

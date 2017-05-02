@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.scan;
+package com.inuker.bluetooth.library.search;
 
 import android.os.Bundle;
 
@@ -15,7 +15,7 @@ import static com.inuker.bluetooth.library.Constants.SEARCH_STOP;
  */
 public class BluetoothSearchManager {
 
-    public static void search(ScanRequest request, final BleGeneralResponse response) {
+    public static void search(SearchRequest request, final BleGeneralResponse response) {
         BluetoothSearchRequest requestWrapper = new BluetoothSearchRequest(request);
         BluetoothSearchHelper.getInstance().startSearch(requestWrapper, new BluetoothSearchResponse() {
             @Override
@@ -24,7 +24,7 @@ public class BluetoothSearchManager {
             }
 
             @Override
-            public void onDeviceFounded(ScanResult device) {
+            public void onDeviceFounded(SearchResult device) {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(EXTRA_SEARCH_RESULT, device);
                 response.onResponse(DEVICE_FOUND, bundle);

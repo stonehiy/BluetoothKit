@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.scan;
+package com.inuker.bluetooth.library.search;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Handler;
@@ -25,10 +25,10 @@ public class BluetoothSearchRequest implements Handler.Callback {
 
 	private Handler mHandler;
 
-	public BluetoothSearchRequest(ScanRequest request) {
+	public BluetoothSearchRequest(SearchRequest request) {
 		mSearchTaskList = new ArrayList<BluetoothSearchTask>();
-		List<ScanTask> tasks = request.getTasks();
-		for (ScanTask task : tasks) {
+		List<SearchTask> tasks = request.getTasks();
+		for (SearchTask task : tasks) {
 			mSearchTaskList.add(new BluetoothSearchTask(task));
 		}
 
@@ -57,7 +57,7 @@ public class BluetoothSearchRequest implements Handler.Callback {
 				break;
 
 			case MSG_DEVICE_FOUND:
-				ScanResult device = (ScanResult) msg.obj;
+				SearchResult device = (SearchResult) msg.obj;
 				if (mSearchResponse != null) {
 					mSearchResponse.onDeviceFounded(device);
 				}
@@ -121,7 +121,7 @@ public class BluetoothSearchRequest implements Handler.Callback {
 		List<BluetoothDevice> devices = BluetoothUtils.getConnectedBluetoothLeDevices();
 
 		for (BluetoothDevice device : devices) {
-			notifyDeviceFounded(new ScanResult(device));
+			notifyDeviceFounded(new SearchResult(device));
 		}
 	}
 
@@ -129,11 +129,11 @@ public class BluetoothSearchRequest implements Handler.Callback {
 		List<BluetoothDevice> devices = BluetoothUtils.getBondedBluetoothClassicDevices();
 
 		for (BluetoothDevice device : devices) {
-			notifyDeviceFounded(new ScanResult(device));
+			notifyDeviceFounded(new SearchResult(device));
 		}
 	}
 
-	private void notifyDeviceFounded(ScanResult device) {
+	private void notifyDeviceFounded(SearchResult device) {
 		mHandler.obtainMessage(MSG_DEVICE_FOUND, device).sendToTarget();
 	}
 
@@ -152,7 +152,7 @@ public class BluetoothSearchRequest implements Handler.Callback {
 		}
 
 		@Override
-		public void onDeviceFounded(ScanResult device) {
+		public void onDeviceFounded(SearchResult device) {
 			// TODO Auto-generated method stub
 			BluetoothLog.v(String.format("onDeviceFounded %s", device));
 			notifyDeviceFounded(device);

@@ -31,4 +31,6 @@ public interface IBluetoothClient {
 	void unindicate(String mac, ParcelUuid service, ParcelUuid character, IResponse response);
 
 	void readRssi(String mac, IResponse response);
+
+	void search();
 }

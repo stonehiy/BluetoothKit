@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.inuker.bluetooth.library.beacon.Beacon;
-import com.inuker.bluetooth.library.scan.ScanResult;
+import com.inuker.bluetooth.library.search.SearchResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,18 +19,18 @@ import java.util.List;
 /**
  * Created by dingjikerbo on 2016/9/1.
  */
-public class DeviceListAdapter extends BaseAdapter implements Comparator<ScanResult> {
+public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchResult> {
 
     private Context mContext;
 
-    private List<ScanResult> mDataList;
+    private List<SearchResult> mDataList;
 
     public DeviceListAdapter(Context context) {
         mContext = context;
-        mDataList = new ArrayList<ScanResult>();
+        mDataList = new ArrayList<SearchResult>();
     }
 
-    public void setDataList(List<ScanResult> datas) {
+    public void setDataList(List<SearchResult> datas) {
         mDataList.clear();
         mDataList.addAll(datas);
         Collections.sort(mDataList, this);
@@ -53,7 +53,7 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<ScanRes
     }
 
     @Override
-    public int compare(ScanResult lhs, ScanResult rhs) {
+    public int compare(SearchResult lhs, SearchResult rhs) {
         return rhs.rssi - lhs.rssi;
     }
 
@@ -82,7 +82,7 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<ScanRes
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final ScanResult result = (ScanResult) getItem(position);
+        final SearchResult result = (SearchResult) getItem(position);
 
         holder.name.setText(result.getName());
         holder.mac.setText(result.getAddress());

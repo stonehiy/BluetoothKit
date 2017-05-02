@@ -14,7 +14,7 @@ import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
-import com.inuker.bluetooth.library.scan.ScanResult;
+import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.BluetoothUtils;
 
@@ -33,7 +33,7 @@ public class DeviceDetailActivity extends Activity {
     private ListView mListView;
     private DeviceDetailAdapter mAdapter;
 
-    private ScanResult mResult;
+    private SearchResult mResult;
 
     private BluetoothDevice mDevice;
 

@@ -1,13 +1,13 @@
-package com.inuker.bluetooth.library.scan;
+package com.inuker.bluetooth.library.search;
 
 /**
  * Created by dingjikerbo on 2016/9/1.
  */
-public interface ScanResponse {
+public interface SearchResponse {
 
     void onSearchStarted();
 
-    void onDeviceFounded(ScanResult device);
+    void onDeviceFounded(SearchResult device);
 
     void onSearchStopped();
 

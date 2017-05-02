@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.inuker.bluetooth.library.scan.ScanRequest;
-import com.inuker.bluetooth.library.scan.ScanResult;
-import com.inuker.bluetooth.library.scan.ScanResponse;
+import com.inuker.bluetooth.library.search.SearchRequest;
+import com.inuker.bluetooth.library.search.SearchResult;
+import com.inuker.bluetooth.library.search.SearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.view.PullRefreshListView;
 import com.inuker.bluetooth.view.PullToRefreshFrameLayout;
@@ -23,14 +23,14 @@ public class MainActivity extends Activity {
     private DeviceListAdapter mAdapter;
     private TextView mTvTitle;
 
-    private List<ScanResult> mDevices;
+    private List<SearchResult> mDevices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDevices = new ArrayList<ScanResult>();
+        mDevices = new ArrayList<SearchResult>();
 
         mTvTitle = (TextView) findViewById(R.id.title);
 
@@ -54,13 +54,13 @@ public class MainActivity extends Activity {
     }
 
     private void searchDevice() {
-        ScanRequest request = new ScanRequest.Builder()
+        SearchRequest request = new SearchRequest.Builder()
                 .searchBluetoothLeDevice(5000, 2).build();
 
         ClientManager.getClient().search(request, mSearchResponse);
     }
 
-    private final ScanResponse mSearchResponse = new ScanResponse() {
+    private final SearchResponse mSearchResponse = new SearchResponse() {
         @Override
         public void onSearchStarted() {
             BluetoothLog.w("MainActivity.onSearchStarted");
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        public void onDeviceFounded(ScanResult device) {
+        public void onDeviceFounded(SearchResult device) {
 //            BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress());
             if (!mDevices.contains(device)) {
                 mDevices.add(device);

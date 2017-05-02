@@ -1,8 +1,11 @@
-package com.inuker.bluetooth.library.scan;
+package com.inuker.bluetooth.library.search;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter.LeScanCallback;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanSettings;
 import android.os.Build;
 
 import com.inuker.bluetooth.library.utils.BluetoothLog;
@@ -31,7 +34,6 @@ public class BluetoothLESearcher extends BluetoothSearcher {
 	public void startScanBluetooth(BluetoothSearchResponse response) {
 		// TODO Auto-generated method stub
 		super.startScanBluetooth(response);
-		
 		mBluetoothAdapter.startLeScan(mLeScanCallback);
 	}
 
@@ -63,7 +65,7 @@ public class BluetoothLESearcher extends BluetoothSearcher {
 		@Override
 		public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
 			// TODO Auto-generated method stub
-            notifyDeviceFounded(new ScanResult(device, rssi, scanRecord));
+            notifyDeviceFounded(new SearchResult(device, rssi, scanRecord));
 		}
 		
 	};
