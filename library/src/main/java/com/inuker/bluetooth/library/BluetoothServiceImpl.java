@@ -7,6 +7,12 @@ import android.os.RemoteException;
 import com.inuker.bluetooth.library.connect.BleConnectManager;
 import com.inuker.bluetooth.library.connect.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleGeneralResponse;
+import com.inuker.bluetooth.library.search.BluetoothSearchHelper;
+import com.inuker.bluetooth.library.search.BluetoothSearchRequest;
+import com.inuker.bluetooth.library.search.SearchRequest;
+import com.inuker.bluetooth.library.search.ISearchResponse;
+import com.inuker.bluetooth.library.search.SearchResult;
+import com.inuker.bluetooth.library.search.response.BluetoothSearchResponse;
 import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
 
 /**
@@ -80,6 +86,17 @@ public class BluetoothServiceImpl implements IBluetoothService {
     @Override
     public void readRssi(String mac, IResponse response) throws RemoteException {
         BleConnectManager.readRssi(mac, new BleGeneralResponse(response));
+    }
+
+    @Override
+    public void search(SearchRequest request, final ISearchResponse response) throws RemoteException {
+        BluetoothSearchHelper.getInstance().startSearch(new BluetoothSearchRequest(request),
+                new BluetoothSearchResponse(response));
+    }
+
+    @Override
+    public void stopSearch() throws RemoteException {
+        BluetoothSearchHelper.getInstance().stopSearch();
     }
 
     @Override

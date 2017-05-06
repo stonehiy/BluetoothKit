@@ -5,6 +5,8 @@ package com.inuker.bluetooth.library;
 
 import com.inuker.bluetooth.library.IResponse;
 import com.inuker.bluetooth.library.connect.BleConnectOptions;
+import com.inuker.bluetooth.library.search.SearchRequest;
+import com.inuker.bluetooth.library.search.ISearchResponse;
 
 interface IBluetoothService {
 
@@ -29,4 +31,8 @@ interface IBluetoothService {
     void unindicate(String mac, in ParcelUuid service, in ParcelUuid character, IResponse response);
 
     void readRssi(String mac, IResponse response);
+
+    void search(in SearchRequest request, ISearchResponse response);
+
+    void stopSearch();
 }

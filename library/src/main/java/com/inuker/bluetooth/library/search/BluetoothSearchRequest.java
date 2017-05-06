@@ -138,7 +138,7 @@ public class BluetoothSearchRequest implements Handler.Callback {
 		mHandler.obtainMessage(MSG_DEVICE_FOUND, device).sendToTarget();
 	}
 
-	private class BluetoothSearchTaskResponse implements BluetoothSearchResponse {
+	private class BluetoothSearchTaskResponse extends BluetoothSearchResponse {
 
 		BluetoothSearchTask task;
 

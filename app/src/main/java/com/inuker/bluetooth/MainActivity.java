@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
     private final SearchResponse mSearchResponse = new SearchResponse() {
         @Override
         public void onSearchStarted() {
-            BluetoothLog.w("MainActivity.onSearchStarted");
+            BluetoothLog.w("MainActivity.onSearchStarted ");
             mListView.onRefreshComplete(true);
             mRefreshLayout.showState(AppConstants.LIST);
             mTvTitle.setText(R.string.string_refreshing);
@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onDeviceFounded(SearchResult device) {
-//            BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress());
+            BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress());
             if (!mDevices.contains(device)) {
                 mDevices.add(device);
                 mAdapter.setDataList(mDevices);
@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onSearchStopped() {
-            BluetoothLog.w("MainActivity.onSearchStopped");
+            BluetoothLog.w("MainActivity.onSearchStopped ");
             mListView.onRefreshComplete(true);
             mRefreshLayout.showState(AppConstants.LIST);
 
@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onSearchCanceled() {
-            BluetoothLog.w("MainActivity.onSearchCanceled");
+            BluetoothLog.w("MainActivity.onSearchCanceled ");
 
             mListView.onRefreshComplete(true);
             mRefreshLayout.showState(AppConstants.LIST);

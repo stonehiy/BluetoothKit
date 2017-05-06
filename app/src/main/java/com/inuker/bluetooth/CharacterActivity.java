@@ -171,12 +171,12 @@ public class CharacterActivity extends Activity implements View.OnClickListener 
     @Override
     protected void onResume() {
         super.onResume();
-        ClientManager.getClient().registerConnectStatusListener(mMac, mConnectStatusListener);
+//        ClientManager.getClient().registerConnectStatusListener(mMac, mConnectStatusListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        ClientManager.getClient().unregisterConnectStatusListener(mMac, mConnectStatusListener);
+//        ClientManager.getClient().unregisterConnectStatusListener(mMac, mConnectStatusListener);
     }
 }

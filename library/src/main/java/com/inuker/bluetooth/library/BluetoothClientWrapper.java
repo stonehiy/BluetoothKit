@@ -7,6 +7,8 @@ import android.os.ParcelUuid;
 import android.os.RemoteException;
 
 import com.inuker.bluetooth.library.connect.BleConnectOptions;
+import com.inuker.bluetooth.library.search.SearchRequest;
+import com.inuker.bluetooth.library.search.ISearchResponse;
 
 /**
  * Created by dingjikerbo on 17/5/6.
@@ -114,6 +116,24 @@ public class BluetoothClientWrapper implements IBluetoothService {
     public void readRssi(String mac, IResponse response) {
         try {
             mService.readRssi(mac, response);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void search(SearchRequest request, ISearchResponse response) {
+        try {
+            mService.search(request, response);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stopSearch() {
+        try {
+            mService.stopSearch();
         } catch (RemoteException e) {
             e.printStackTrace();
         }

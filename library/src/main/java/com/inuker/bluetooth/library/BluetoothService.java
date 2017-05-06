@@ -10,6 +10,8 @@ import android.os.ParcelUuid;
 import android.os.RemoteException;
 
 import com.inuker.bluetooth.library.connect.BleConnectOptions;
+import com.inuker.bluetooth.library.search.SearchRequest;
+import com.inuker.bluetooth.library.search.ISearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.ReflectUtils;
 import com.inuker.bluetooth.library.utils.proxy.ProxyBulk;
@@ -144,6 +146,16 @@ public class BluetoothService extends Service {
         @Override
         public void readRssi(String mac, IResponse response) throws RemoteException {
             BluetoothServiceImpl.getInstance().readRssi(mac, response);
+        }
+
+        @Override
+        public void search(SearchRequest request, ISearchResponse response) throws RemoteException {
+            BluetoothServiceImpl.getInstance().search(request, response);
+        }
+
+        @Override
+        public void stopSearch() throws RemoteException {
+            BluetoothServiceImpl.getInstance().stopSearch();
         }
     };
 }

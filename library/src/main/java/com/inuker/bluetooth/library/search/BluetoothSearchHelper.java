@@ -56,7 +56,7 @@ public class BluetoothSearchHelper implements IBluetoothSearchHelper, ProxyInter
         }
     }
 
-    private class BluetoothSearchResponseImpl implements BluetoothSearchResponse {
+    private class BluetoothSearchResponseImpl extends BluetoothSearchResponse {
 
         BluetoothSearchResponse response;
 

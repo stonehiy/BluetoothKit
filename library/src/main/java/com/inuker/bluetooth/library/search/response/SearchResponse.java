@@ -1,17 +1,10 @@
 package com.inuker.bluetooth.library.search.response;
 
-import com.inuker.bluetooth.library.search.SearchResult;
+import com.inuker.bluetooth.library.search.ISearchResponse;
 
 /**
- * Created by dingjikerbo on 2016/9/1.
+ * Created by dingjikerbo on 17/5/6.
  */
-public interface SearchResponse {
 
-    void onSearchStarted();
-
-    void onDeviceFounded(SearchResult device);
-
-    void onSearchStopped();
-
-    void onSearchCanceled();
+public abstract class SearchResponse extends ISearchResponse.Stub {
 }

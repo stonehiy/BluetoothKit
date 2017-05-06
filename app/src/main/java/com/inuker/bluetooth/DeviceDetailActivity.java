@@ -73,7 +73,7 @@ public class DeviceDetailActivity extends Activity {
             }
         });
 
-        ClientManager.getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+//        ClientManager.getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
 
         connectDeviceIfNeeded();
     }
@@ -133,7 +133,7 @@ public class DeviceDetailActivity extends Activity {
     @Override
     protected void onDestroy() {
         ClientManager.getClient().disconnect(mDevice.getAddress());
-        ClientManager.getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+//        ClientManager.getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
         super.onDestroy();
     }
 }
