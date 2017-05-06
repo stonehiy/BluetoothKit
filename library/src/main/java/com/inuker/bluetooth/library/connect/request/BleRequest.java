@@ -8,7 +8,7 @@ import android.os.Parcelable;
 
 import com.inuker.bluetooth.library.Code;
 import com.inuker.bluetooth.library.Constants;
-import com.inuker.bluetooth.library.RuntimeChecker;
+import com.inuker.bluetooth.library.utils.RuntimeChecker;
 import com.inuker.bluetooth.library.connect.IBleConnectDispatcher;
 import com.inuker.bluetooth.library.connect.IBleConnectWorker;
 import com.inuker.bluetooth.library.connect.listener.GattResponseListener;

@@ -6,7 +6,7 @@ import android.os.Message;
 
 import com.inuker.bluetooth.library.Code;
 import com.inuker.bluetooth.library.Constants;
-import com.inuker.bluetooth.library.RuntimeChecker;
+import com.inuker.bluetooth.library.utils.RuntimeChecker;
 import com.inuker.bluetooth.library.connect.request.BleConnectRequest;
 import com.inuker.bluetooth.library.connect.request.BleIndicateRequest;
 import com.inuker.bluetooth.library.connect.request.BleNotifyRequest;

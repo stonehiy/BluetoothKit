@@ -15,7 +15,7 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.inuker.bluetooth.library.Constants;
-import com.inuker.bluetooth.library.RuntimeChecker;
+import com.inuker.bluetooth.library.utils.RuntimeChecker;
 import com.inuker.bluetooth.library.connect.listener.GattResponseListener;
 import com.inuker.bluetooth.library.connect.listener.IBluetoothGattResponse;
 import com.inuker.bluetooth.library.connect.listener.ReadCharacterListener;
