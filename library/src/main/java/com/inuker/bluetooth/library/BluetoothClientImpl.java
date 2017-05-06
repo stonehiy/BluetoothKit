@@ -22,7 +22,7 @@ public class BluetoothClientImpl implements IBluetoothService, ProxyInterceptor,
 
     private static final String TAG = BluetoothClientImpl.class.getSimpleName();
 
-    private volatile static BluetoothClientImpl sInstance;
+    private volatile static IBluetoothService sInstance;
 
     private HandlerThread mWorkerThread;
     private Handler mWorkerHandler;
@@ -108,7 +108,7 @@ public class BluetoothClientImpl implements IBluetoothService, ProxyInterceptor,
         throw new UnsupportedOperationException();
     }
 
-    public static BluetoothClientImpl getInstance(Context context) {
+    public static IBluetoothService getInstance(Context context) {
         if (sInstance == null) {
             synchronized (BluetoothClientImpl.class) {
                 if (sInstance == null) {
