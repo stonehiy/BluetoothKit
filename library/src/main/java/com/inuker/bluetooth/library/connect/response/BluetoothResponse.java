@@ -8,6 +8,8 @@ import android.os.RemoteException;
 
 import com.inuker.bluetooth.library.BluetoothContext;
 import com.inuker.bluetooth.library.IResponse;
+import com.inuker.bluetooth.library.model.BleGattProfile;
+import com.inuker.bluetooth.library.utils.BluetoothLog;
 
 /**
  * Created by dingjikerbo on 2015/12/31.
@@ -21,7 +23,15 @@ public abstract class BluetoothResponse extends IResponse.Stub {
         BluetoothContext.post(new Runnable() {
             @Override
             public void run() {
-                onAsyncResponse(code, data);
+                if (data != null) {
+                    data.setClassLoader(BleGattProfile.class.getClassLoader());
+                }
+
+                try {
+                    onAsyncResponse(code, data);
+                } catch (Throwable e) {
+                    BluetoothLog.e(e);
+                }
             }
         });
     }

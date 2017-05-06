@@ -97,7 +97,9 @@ public class BluetoothClient extends BluetoothClientWrapper {
         unnotify(mac, new ParcelUuid(service), new ParcelUuid(character), new BluetoothResponse() {
             @Override
             protected void onAsyncResponse(int code, Bundle data) {
-                response.onResponse(code);
+                if (response != null) {
+                    response.onResponse(code);
+                }
             }
         });
     }
@@ -112,12 +114,7 @@ public class BluetoothClient extends BluetoothClientWrapper {
     }
 
     public void unindicate(String mac, UUID service, UUID character, final BleUnindicateResponse response) {
-        unindicate(mac, new ParcelUuid(service), new ParcelUuid(character), new BluetoothResponse() {
-            @Override
-            protected void onAsyncResponse(int code, Bundle data) {
-                response.onResponse(code);
-            }
-        });
+        unnotify(mac, service, character, response);
     }
 
     public void readRssi(String mac, final BleReadRssiResponse response) {
