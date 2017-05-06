@@ -15,8 +15,6 @@ import com.inuker.bluetooth.library.connect.response.BleUnnotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.connect.response.BluetoothResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
-import com.inuker.bluetooth.library.search.SearchRequest;
-import com.inuker.bluetooth.library.search.response.SearchResponse;
 
 import java.util.UUID;
 

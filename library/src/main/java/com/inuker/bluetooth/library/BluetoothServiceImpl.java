@@ -9,9 +9,8 @@ import com.inuker.bluetooth.library.connect.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleGeneralResponse;
 import com.inuker.bluetooth.library.search.BluetoothSearchHelper;
 import com.inuker.bluetooth.library.search.BluetoothSearchRequest;
-import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.ISearchResponse;
-import com.inuker.bluetooth.library.search.SearchResult;
+import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.response.BluetoothSearchResponse;
 import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
 

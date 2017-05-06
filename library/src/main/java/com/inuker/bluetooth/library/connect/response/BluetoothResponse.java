@@ -1,10 +1,6 @@
 package com.inuker.bluetooth.library.connect.response;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
 
 import com.inuker.bluetooth.library.BluetoothContext;
 import com.inuker.bluetooth.library.IResponse;

@@ -1,14 +1,13 @@
 package com.inuker.bluetooth.library;
 
 import android.content.Context;
-import android.database.ContentObservable;
 import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.os.RemoteException;
 
 import com.inuker.bluetooth.library.connect.BleConnectOptions;
-import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.ISearchResponse;
+import com.inuker.bluetooth.library.search.SearchRequest;
 
 /**
  * Created by dingjikerbo on 17/5/6.

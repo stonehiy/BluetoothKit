@@ -7,11 +7,10 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.ParcelUuid;
-import android.os.RemoteException;
 
 import com.inuker.bluetooth.library.connect.BleConnectOptions;
-import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.ISearchResponse;
+import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.utils.proxy.ProxyBulk;
 import com.inuker.bluetooth.library.utils.proxy.ProxyInterceptor;
 import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
