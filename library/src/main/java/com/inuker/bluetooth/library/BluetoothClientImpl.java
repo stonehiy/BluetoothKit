@@ -13,7 +13,7 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
-import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
+import com.inuker.bluetooth.library.connect.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleReadResponse;
@@ -179,21 +179,8 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
     };
 
     @Override
-    public void connect(String mac, BleConnectOptions options, final BleConnectResponse response) {
-        Bundle args = new Bundle();
-        args.putString(EXTRA_MAC, mac);
-        args.putParcelable(EXTRA_OPTIONS, options);
-        safeCallBluetoothApi(CODE_CONNECT, args, new BluetoothResponse() {
-            @Override
-            protected void onAsyncResponse(int code, Bundle data) {
-                checkRuntime(true);
-                if (response != null) {
-                    data.setClassLoader(getClass().getClassLoader());
-                    BleGattProfile profile = data.getParcelable(EXTRA_GATT_PROFILE);
-                    response.onResponse(code, profile);
-                }
-            }
-        });
+    public void connect(String mac, BleConnectOptions options, final BluetoothResponse response) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

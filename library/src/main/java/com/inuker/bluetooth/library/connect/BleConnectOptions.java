@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.connect.options;
+package com.inuker.bluetooth.library.connect;
 
 import android.os.Parcel;
 import android.os.Parcelable;

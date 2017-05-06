@@ -3,7 +3,7 @@ package com.inuker.bluetooth.library.connect;
 import android.os.HandlerThread;
 import android.os.Looper;
 
-import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
+import com.inuker.bluetooth.library.connect.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleGeneralResponse;
 
 import java.util.HashMap;

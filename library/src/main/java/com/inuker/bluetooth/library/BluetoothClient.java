@@ -1,15 +1,18 @@
 package com.inuker.bluetooth.library;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
-import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
+import com.inuker.bluetooth.library.connect.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleReadResponse;
 import com.inuker.bluetooth.library.connect.response.BleReadRssiResponse;
 import com.inuker.bluetooth.library.connect.response.BleUnnotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
+import com.inuker.bluetooth.library.connect.response.BluetoothResponse;
+import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.receiver.listener.BluetoothBondListener;
 import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
 import com.inuker.bluetooth.library.search.SearchRequest;
@@ -21,17 +24,16 @@ import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
 
 import java.util.UUID;
 
+import static com.inuker.bluetooth.library.Constants.EXTRA_GATT_PROFILE;
+
 /**
  * Created by dingjikerbo on 2016/9/1.
  */
-public class BluetoothClient implements IBluetoothClient {
+public class BluetoothClient {
 
     private IBluetoothClient mClient;
 
     public BluetoothClient(Context context) {
-        if (context == null) {
-            throw new NullPointerException("Context null");
-        }
         mClient = BluetoothClientImpl.getInstance(context);
     }
 
@@ -39,24 +41,22 @@ public class BluetoothClient implements IBluetoothClient {
         connect(mac, null, response);
     }
 
-    @Override
-    public void connect(String mac, BleConnectOptions options, BleConnectResponse response) {
-        BluetoothLog.v(String.format("connect %s", mac));
-        response = ProxyUtils.getUIProxy(response);
-        mClient.connect(mac, options, response);
+    public void connect(String mac, BleConnectOptions options, final BleConnectResponse response) {
+        mClient.connect(mac, options, new BluetoothResponse() {
+
+            @Override
+            protected void onAsyncResponse(int code, Bundle data) {
+                BleGattProfile profile = data.getParcelable(EXTRA_GATT_PROFILE);
+                response.onResponse(code, profile);
+            }
+        });
     }
 
-    @Override
     public void disconnect(String mac) {
-        BluetoothLog.v(String.format("disconnect %s", mac));
         mClient.disconnect(mac);
     }
 
-    @Override
     public void read(String mac, UUID service, UUID character, BleReadResponse response) {
-        BluetoothLog.v(String.format("read character for %s: service = %s, character = %s", mac, service, character));
-
-        response = ProxyUtils.getUIProxy(response);
         mClient.read(mac, service, character, response);
     }
 

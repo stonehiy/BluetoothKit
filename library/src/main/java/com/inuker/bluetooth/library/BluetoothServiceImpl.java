@@ -7,7 +7,7 @@ import android.os.Message;
 import android.os.RemoteException;
 
 import com.inuker.bluetooth.library.connect.BleConnectManager;
-import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
+import com.inuker.bluetooth.library.connect.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleGeneralResponse;
 import com.inuker.bluetooth.library.search.BluetoothSearchManager;
 import com.inuker.bluetooth.library.search.SearchRequest;
@@ -85,6 +85,11 @@ public class BluetoothServiceImpl extends IBluetoothService.Stub implements Hand
         args.setClassLoader(getClass().getClassLoader());
         msg.setData(args);
         msg.sendToTarget();
+    }
+
+    @Override
+    public void connect(String mac, BleConnectOptions options, IResponse response) throws RemoteException {
+
     }
 
     @Override
