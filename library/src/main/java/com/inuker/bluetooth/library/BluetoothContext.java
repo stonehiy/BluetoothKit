@@ -42,4 +42,14 @@ public class BluetoothContext {
     public static boolean bindService(Class<?> service, ServiceConnection connection, int flag) {
         return mContext.bindService(new Intent(mContext, service), connection, flag);
     }
+
+    public static boolean checkMainThread() {
+        return Looper.getMainLooper() == Looper.myLooper();
+    }
+
+    public static void assertMainThread() {
+        if (!checkMainThread()) {
+            throw new RuntimeException();
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.inuker.bluetooth.library.connect;
 import android.os.HandlerThread;
 import android.os.Looper;
 
+import com.inuker.bluetooth.library.BluetoothContext;
 import com.inuker.bluetooth.library.connect.response.BleGeneralResponse;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class BleConnectManager {
     private static HandlerThread mWorkerThread;
 
     static {
-        mBleConnectMasters = new HashMap<String, IBleConnectMaster>();
+        mBleConnectMasters = new HashMap<>();
     }
 
     private static Looper getWorkerLooper() {
@@ -32,6 +33,8 @@ public class BleConnectManager {
     }
 
     private static IBleConnectMaster getBleConnectMaster(String mac) {
+        BluetoothContext.assertMainThread();
+
         IBleConnectMaster master;
 
         master = mBleConnectMasters.get(mac);
