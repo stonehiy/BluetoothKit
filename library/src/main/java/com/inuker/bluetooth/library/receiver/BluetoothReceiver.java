@@ -12,11 +12,7 @@ import android.text.TextUtils;
 import com.inuker.bluetooth.library.receiver.listener.BluetoothReceiverListener;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.BluetoothUtils;
-import com.inuker.bluetooth.library.utils.proxy.ProxyBulk;
-import com.inuker.bluetooth.library.utils.proxy.ProxyInterceptor;
-import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

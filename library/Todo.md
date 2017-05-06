@@ -9,3 +9,10 @@
  9. 连接断掉时自动clearRequest
  10. 搜索增强
  11. 不要用广播，都用事件总线
+ 
+ 
+ 要注意的地方：
+ 断开连接时删除所有notify listener
+ 支持监听连接状态，并且要保证实时性
+ notify打开成功了才保存listener, unnotify不论成功失败都删除listener
+ 搜索

@@ -1,6 +1,8 @@
 package com.inuker.bluetooth.library;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -14,7 +16,7 @@ public class BluetoothContext {
     private static Handler mHandler;
 
     public static void set(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
     }
 
     public static Context get() {
@@ -35,5 +37,9 @@ public class BluetoothContext {
     public static String getCurrentMethodName() {
         StackTraceElement e = Thread.currentThread().getStackTrace()[4];
         return e.getMethodName();
+    }
+
+    public static boolean bindService(Class<?> service, ServiceConnection connection, int flag) {
+        return mContext.bindService(new Intent(mContext, service), connection, flag);
     }
 }

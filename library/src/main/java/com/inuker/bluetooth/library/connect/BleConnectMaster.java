@@ -5,7 +5,6 @@ import android.os.Handler.Callback;
 import android.os.Looper;
 import android.os.Message;
 
-import com.inuker.bluetooth.library.connect.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleGeneralResponse;
 import com.inuker.bluetooth.library.utils.proxy.ProxyBulk;
 import com.inuker.bluetooth.library.utils.proxy.ProxyInterceptor;
