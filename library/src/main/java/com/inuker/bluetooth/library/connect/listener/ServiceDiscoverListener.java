@@ -1,6 +1,6 @@
 package com.inuker.bluetooth.library.connect.listener;
 
-import com.inuker.bluetooth.library.model.BleGattProfile;
+import com.inuker.bluetooth.library.compat.BleGattProfile;
 
 /**
  * Created by dingjikerbo on 2016/8/25.

@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.inuker.bluetooth.library.BluetoothContext;
 import com.inuker.bluetooth.library.IResponse;
-import com.inuker.bluetooth.library.model.BleGattProfile;
+import com.inuker.bluetooth.library.compat.BleGattProfile;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 
 /**

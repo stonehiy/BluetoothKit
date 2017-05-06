@@ -25,7 +25,7 @@ import com.inuker.bluetooth.library.connect.listener.ServiceDiscoverListener;
 import com.inuker.bluetooth.library.connect.listener.WriteCharacterListener;
 import com.inuker.bluetooth.library.connect.listener.WriteDescriptorListener;
 import com.inuker.bluetooth.library.connect.response.BluetoothGattResponse;
-import com.inuker.bluetooth.library.model.BleGattProfile;
+import com.inuker.bluetooth.library.compat.BleGattProfile;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.BluetoothUtils;
 import com.inuker.bluetooth.library.utils.ByteUtils;

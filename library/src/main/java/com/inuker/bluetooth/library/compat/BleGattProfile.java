@@ -1,4 +1,4 @@
-package com.inuker.bluetooth.library.model;
+package com.inuker.bluetooth.library.compat;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.Parcel;

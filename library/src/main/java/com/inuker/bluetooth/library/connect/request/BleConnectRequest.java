@@ -8,7 +8,7 @@ import com.inuker.bluetooth.library.Constants;
 import com.inuker.bluetooth.library.connect.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.listener.ServiceDiscoverListener;
 import com.inuker.bluetooth.library.connect.response.BleGeneralResponse;
-import com.inuker.bluetooth.library.model.BleGattProfile;
+import com.inuker.bluetooth.library.compat.BleGattProfile;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 
 public class BleConnectRequest extends BleRequest implements ServiceDiscoverListener {
