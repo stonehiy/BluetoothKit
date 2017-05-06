@@ -7,17 +7,13 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.ParcelUuid;
-import android.os.RemoteException;
 
 import com.inuker.bluetooth.library.connect.BleConnectOptions;
-import com.inuker.bluetooth.library.connect.response.BluetoothResponse;
-import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.utils.proxy.ProxyBulk;
 import com.inuker.bluetooth.library.utils.proxy.ProxyInterceptor;
 import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
 
 import java.lang.reflect.Method;
-import java.util.UUID;
 
 /**
  * Created by dingjikerbo on 16/4/8.
@@ -40,20 +36,8 @@ public class BluetoothClientImpl implements IBluetoothService, ProxyInterceptor,
         mWorkerHandler = new Handler(mWorkerThread.getLooper(), this);
     }
 
-    public static BluetoothClientImpl getInstance(Context context) {
-        if (sInstance == null) {
-            synchronized (BluetoothClientImpl.class) {
-                if (sInstance == null) {
-                    BluetoothClientImpl client = new BluetoothClientImpl(context);
-                    sInstance = ProxyUtils.getProxy(client, IBluetoothService.class, client);
-                }
-            }
-        }
-        return sInstance;
-    }
-
     @Override
-    public void connect(String mac, BleConnectOptions options, final BluetoothResponse response) {
+    public void connect(String mac, BleConnectOptions options, IResponse response) {
         throw new UnsupportedOperationException();
     }
 
@@ -63,67 +47,47 @@ public class BluetoothClientImpl implements IBluetoothService, ProxyInterceptor,
     }
 
     @Override
-    public void read(String mac, ParcelUuid service, ParcelUuid character, IResponse response) throws RemoteException {
-
-    }
-
-    @Override
-    public void write(String mac, ParcelUuid service, ParcelUuid character, byte[] value, IResponse response) throws RemoteException {
-
-    }
-
-    @Override
-    public void read(String mac, UUID service, UUID character, final BluetoothResponse response) {
+    public void read(String mac, ParcelUuid service, ParcelUuid character, IResponse response) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void write(String mac, UUID service, UUID character, byte[] value, final BluetoothResponse response) {
+    public void write(String mac, ParcelUuid service, ParcelUuid character, byte[] value, IResponse response) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void readDescriptor(String mac, UUID service, UUID character, UUID descriptor, final BluetoothResponse response) {
+    public void readDescriptor(String mac, ParcelUuid service, ParcelUuid character, ParcelUuid descriptor, IResponse response) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void writeDescriptor(String mac, UUID service, UUID character, UUID descriptor, byte[] value, final BluetoothResponse response) {
+    public void writeDescriptor(String mac, ParcelUuid service, ParcelUuid character, ParcelUuid descriptor, byte[] value, IResponse response) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void notify(final String mac, final UUID service, final UUID character, final BluetoothResponse response) {
+    public void notify(String mac, ParcelUuid service, ParcelUuid character, IResponse response) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void unnotify(final String mac, final UUID service, final UUID character, final BluetoothResponse response) {
+    public void unnotify(String mac, ParcelUuid service, ParcelUuid character, IResponse response) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void indicate(final String mac, final UUID service, final UUID character, final BluetoothResponse response) {
+    public void indicate(String mac, ParcelUuid service, ParcelUuid character, IResponse response) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void unindicate(String mac, UUID service, UUID character, BluetoothResponse response) {
+    public void unindicate(String mac, ParcelUuid service, ParcelUuid character, IResponse response) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void readRssi(String mac, final BluetoothResponse response) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void search(SearchRequest request, final BluetoothResponse response) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void stopSearch() {
+    public void readRssi(String mac, IResponse response) {
         throw new UnsupportedOperationException();
     }
 
@@ -140,12 +104,19 @@ public class BluetoothClientImpl implements IBluetoothService, ProxyInterceptor,
     }
 
     @Override
-    public void connect(String mac, BleConnectOptions options, IResponse response) throws RemoteException {
-
+    public IBinder asBinder() {
+        throw new UnsupportedOperationException();
     }
 
-    @Override
-    public IBinder asBinder() {
-        return null;
+    public static BluetoothClientImpl getInstance(Context context) {
+        if (sInstance == null) {
+            synchronized (BluetoothClientImpl.class) {
+                if (sInstance == null) {
+                    BluetoothClientImpl client = new BluetoothClientImpl(context);
+                    sInstance = ProxyUtils.getProxy(client, IBluetoothService.class, client);
+                }
+            }
+        }
+        return sInstance;
     }
 }

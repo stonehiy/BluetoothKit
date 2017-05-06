@@ -2,6 +2,7 @@ package com.inuker.bluetooth.library;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.ParcelUuid;
 
 import com.inuker.bluetooth.library.connect.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
@@ -51,7 +52,7 @@ public class BluetoothClient {
     }
 
     public void read(String mac, UUID service, UUID character, final BleReadResponse response) {
-        mClient.read(mac, service, character, new BluetoothResponse() {
+        mClient.read(mac, new ParcelUuid(service), new ParcelUuid(character), new BluetoothResponse() {
 
             @Override
             protected void onAsyncResponse(int code, Bundle data) {
@@ -61,7 +62,7 @@ public class BluetoothClient {
     }
 
     public void write(String mac, UUID service, UUID character, byte[] value, final BleWriteResponse response) {
-        mClient.write(mac, service, character, value, new BluetoothResponse() {
+        mClient.write(mac, new ParcelUuid(service), new ParcelUuid(character), value, new BluetoothResponse() {
 
             @Override
             protected void onAsyncResponse(int code, Bundle data) {
@@ -71,7 +72,7 @@ public class BluetoothClient {
     }
 
     public void readDescriptor(String mac, UUID service, UUID character, UUID descriptor, final BleReadResponse response) {
-        mClient.readDescriptor(mac, service, character, descriptor, new BluetoothResponse() {
+        mClient.readDescriptor(mac, new ParcelUuid(service), new ParcelUuid(character), new ParcelUuid(descriptor), new BluetoothResponse() {
             @Override
             protected void onAsyncResponse(int code, Bundle data) {
                 response.onResponse(code, data.getByteArray(EXTRA_BYTE_VALUE));
@@ -80,7 +81,7 @@ public class BluetoothClient {
     }
 
     public void writeDescriptor(String mac, UUID service, UUID character, UUID descriptor, byte[] value, final BleWriteResponse response) {
-        mClient.writeDescriptor(mac, service, character, descriptor, value, new BluetoothResponse() {
+        mClient.writeDescriptor(mac, new ParcelUuid(service), new ParcelUuid(character), new ParcelUuid(descriptor), value, new BluetoothResponse() {
             @Override
             protected void onAsyncResponse(int code, Bundle data) {
                 response.onResponse(code);
@@ -89,7 +90,7 @@ public class BluetoothClient {
     }
 
     public void notify(String mac, UUID service, UUID character, final BleNotifyResponse response) {
-        mClient.notify(mac, service, character, new BluetoothResponse() {
+        mClient.notify(mac, new ParcelUuid(service), new ParcelUuid(character), new BluetoothResponse() {
 
             @Override
             protected void onAsyncResponse(int code, Bundle data) {
@@ -99,7 +100,7 @@ public class BluetoothClient {
     }
 
     public void unnotify(String mac, UUID service, UUID character, final BleUnnotifyResponse response) {
-        mClient.unnotify(mac, service, character, new BluetoothResponse() {
+        mClient.unnotify(mac, new ParcelUuid(service), new ParcelUuid(character), new BluetoothResponse() {
             @Override
             protected void onAsyncResponse(int code, Bundle data) {
                 response.onResponse(code);
@@ -108,7 +109,7 @@ public class BluetoothClient {
     }
 
     public void indicate(String mac, UUID service, UUID character, final BleIndicateResponse response) {
-        mClient.indicate(mac, service, character, new BluetoothResponse() {
+        mClient.indicate(mac, new ParcelUuid(service), new ParcelUuid(character), new BluetoothResponse() {
             @Override
             protected void onAsyncResponse(int code, Bundle data) {
                 response.onResponse(code);
@@ -117,7 +118,7 @@ public class BluetoothClient {
     }
 
     public void unindicate(String mac, UUID service, UUID character, final BleUnindicateResponse response) {
-        mClient.unindicate(mac, service, character, new BluetoothResponse() {
+        mClient.unindicate(mac, new ParcelUuid(service), new ParcelUuid(character), new BluetoothResponse() {
             @Override
             protected void onAsyncResponse(int code, Bundle data) {
                 response.onResponse(code);

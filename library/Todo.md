@@ -16,3 +16,4 @@
  支持监听连接状态，并且要保证实时性
  notify打开成功了才保存listener, unnotify不论成功失败都删除listener
  搜索
+ 蓝牙关闭时停止扫描

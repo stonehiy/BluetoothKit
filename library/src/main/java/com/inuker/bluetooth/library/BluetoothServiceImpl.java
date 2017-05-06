@@ -1,62 +1,26 @@
 package com.inuker.bluetooth.library;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.os.IBinder;
+import android.os.ParcelUuid;
 import android.os.RemoteException;
 
 import com.inuker.bluetooth.library.connect.BleConnectManager;
 import com.inuker.bluetooth.library.connect.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleGeneralResponse;
-import com.inuker.bluetooth.library.search.BluetoothSearchManager;
-import com.inuker.bluetooth.library.search.SearchRequest;
-import com.inuker.bluetooth.library.utils.BluetoothLog;
-
-import java.util.UUID;
-
-import static com.inuker.bluetooth.library.Constants.CODE_CLEAR_REQUEST;
-import static com.inuker.bluetooth.library.Constants.CODE_CONNECT;
-import static com.inuker.bluetooth.library.Constants.CODE_DISCONNECT;
-import static com.inuker.bluetooth.library.Constants.CODE_INDICATE;
-import static com.inuker.bluetooth.library.Constants.CODE_NOTIFY;
-import static com.inuker.bluetooth.library.Constants.CODE_READ;
-import static com.inuker.bluetooth.library.Constants.CODE_READ_DESCRIPTOR;
-import static com.inuker.bluetooth.library.Constants.CODE_READ_RSSI;
-import static com.inuker.bluetooth.library.Constants.CODE_REFRESH_CACHE;
-import static com.inuker.bluetooth.library.Constants.CODE_SEARCH;
-import static com.inuker.bluetooth.library.Constants.CODE_STOP_SESARCH;
-import static com.inuker.bluetooth.library.Constants.CODE_UNNOTIFY;
-import static com.inuker.bluetooth.library.Constants.CODE_WRITE;
-import static com.inuker.bluetooth.library.Constants.CODE_WRITE_DESCRIPTOR;
-import static com.inuker.bluetooth.library.Constants.CODE_WRITE_NORSP;
-import static com.inuker.bluetooth.library.Constants.EXTRA_BYTE_VALUE;
-import static com.inuker.bluetooth.library.Constants.EXTRA_CHARACTER_UUID;
-import static com.inuker.bluetooth.library.Constants.EXTRA_DESCRIPTOR_UUID;
-import static com.inuker.bluetooth.library.Constants.EXTRA_MAC;
-import static com.inuker.bluetooth.library.Constants.EXTRA_OPTIONS;
-import static com.inuker.bluetooth.library.Constants.EXTRA_REQUEST;
-import static com.inuker.bluetooth.library.Constants.EXTRA_SERVICE_UUID;
-import static com.inuker.bluetooth.library.Constants.EXTRA_TYPE;
+import com.inuker.bluetooth.library.utils.proxy.ProxyUtils;
 
 /**
  * Created by dingjikerbo on 2015/10/29.
  */
-public class BluetoothServiceImpl extends IBluetoothService.Stub implements Handler.Callback {
+public class BluetoothServiceImpl implements IBluetoothService {
 
-    private static BluetoothServiceImpl sInstance;
+    private static IBluetoothService sInstance;
 
-    private Handler mHandler;
-
-    private BluetoothServiceImpl() {
-        mHandler = new Handler(Looper.getMainLooper(), this);
-    }
-
-    public static BluetoothServiceImpl getInstance() {
+    public static IBluetoothService getInstance() {
         if (sInstance == null) {
             synchronized (BluetoothServiceImpl.class) {
                 if (sInstance == null) {
-                    sInstance = new BluetoothServiceImpl();
+                    sInstance = ProxyUtils.getUIProxy(new BluetoothServiceImpl());
                 }
             }
         }
@@ -64,108 +28,62 @@ public class BluetoothServiceImpl extends IBluetoothService.Stub implements Hand
     }
 
     @Override
-    public void callBluetoothApi(int code, Bundle args, final IResponse response) throws RemoteException {
-        Message msg = mHandler.obtainMessage(code, new BleGeneralResponse() {
-
-            @Override
-            public void onResponse(int code, Bundle data) {
-                if (response != null) {
-                    if (data == null) {
-                        data = new Bundle();
-                    }
-                    try {
-                        response.onResponse(code, data);
-                    } catch (Throwable e) {
-                        BluetoothLog.e(e);
-                    }
-                }
-            }
-        });
-
-        args.setClassLoader(getClass().getClassLoader());
-        msg.setData(args);
-        msg.sendToTarget();
+    public void connect(String mac, BleConnectOptions options, final IResponse response) throws RemoteException {
+        BleConnectManager.connect(mac, options, new BleGeneralResponse(response));
     }
 
     @Override
-    public void connect(String mac, BleConnectOptions options, IResponse response) throws RemoteException {
-
+    public void disconnect(String mac) throws RemoteException {
+        BleConnectManager.disconnect(mac);
     }
 
     @Override
-    public boolean handleMessage(Message msg) {
-        Bundle args = msg.getData();
-        String mac = args.getString(EXTRA_MAC);
-        UUID service = (UUID) args.getSerializable(EXTRA_SERVICE_UUID);
-        UUID character = (UUID) args.getSerializable(EXTRA_CHARACTER_UUID);
-        UUID descriptor = (UUID) args.getSerializable(EXTRA_DESCRIPTOR_UUID);
-        byte[] value = args.getByteArray(EXTRA_BYTE_VALUE);
-        BleGeneralResponse response = (BleGeneralResponse) msg.obj;
+    public void read(String mac, ParcelUuid service, ParcelUuid character, IResponse response) throws RemoteException {
+        BleConnectManager.read(mac, service.getUuid(), character.getUuid(), new BleGeneralResponse(response));
+    }
 
-        switch (msg.what) {
-            case CODE_CONNECT:
-                BleConnectOptions options = args.getParcelable(EXTRA_OPTIONS);
-                BleConnectManager.connect(mac, options, response);
-                break;
+    @Override
+    public void write(String mac, ParcelUuid service, ParcelUuid character, byte[] value, IResponse response) throws RemoteException {
+        BleConnectManager.write(mac, service.getUuid(), character.getUuid(), value, new BleGeneralResponse(response));
+    }
 
-            case CODE_DISCONNECT:
-                BleConnectManager.disconnect(mac);
-                break;
+    @Override
+    public void readDescriptor(String mac, ParcelUuid service, ParcelUuid character, ParcelUuid descriptor, IResponse response) throws RemoteException {
+        BleConnectManager.readDescriptor(mac, service.getUuid(), character.getUuid(), descriptor.getUuid(), new BleGeneralResponse(response));
+    }
 
-            case CODE_READ:
-                BleConnectManager.read(mac, service, character, response);
-                break;
+    @Override
+    public void writeDescriptor(String mac, ParcelUuid service, ParcelUuid character, ParcelUuid descriptor, byte[] value, IResponse response) throws RemoteException {
+        BleConnectManager.writeDescriptor(mac, service.getUuid(), character.getUuid(), descriptor.getUuid(), value, new BleGeneralResponse(response));
+    }
 
-            case CODE_WRITE:
-                BleConnectManager.write(mac, service, character, value, response);
-                break;
+    @Override
+    public void notify(String mac, ParcelUuid service, ParcelUuid character, IResponse response) throws RemoteException {
+        BleConnectManager.notify(mac, service.getUuid(), character.getUuid(), new BleGeneralResponse(response));
+    }
 
-            case CODE_WRITE_NORSP:
-                BleConnectManager.writeNoRsp(mac, service, character, value, response);
-                break;
+    @Override
+    public void unnotify(String mac, ParcelUuid service, ParcelUuid character, IResponse response) throws RemoteException {
+        BleConnectManager.unnotify(mac, service.getUuid(), character.getUuid(), new BleGeneralResponse(response));
+    }
 
-            case CODE_READ_DESCRIPTOR:
-                BleConnectManager.readDescriptor(mac, service, character, descriptor, response);
-                break;
+    @Override
+    public void indicate(String mac, ParcelUuid service, ParcelUuid character, IResponse response) throws RemoteException {
+        BleConnectManager.indicate(mac, service.getUuid(), character.getUuid(), new BleGeneralResponse(response));
+    }
 
-            case CODE_WRITE_DESCRIPTOR:
-                BleConnectManager.writeDescriptor(mac, service, character, descriptor, value, response);
-                break;
+    @Override
+    public void unindicate(String mac, ParcelUuid service, ParcelUuid character, IResponse response) throws RemoteException {
+        BleConnectManager.unnotify(mac, service.getUuid(), character.getUuid(), new BleGeneralResponse(response));
+    }
 
-            case CODE_NOTIFY:
-                BleConnectManager.notify(mac, service, character, response);
-                break;
+    @Override
+    public void readRssi(String mac, IResponse response) throws RemoteException {
+        BleConnectManager.readRssi(mac, new BleGeneralResponse(response));
+    }
 
-            case CODE_UNNOTIFY:
-                BleConnectManager.unnotify(mac, service, character, response);
-                break;
-
-            case CODE_READ_RSSI:
-                BleConnectManager.readRssi(mac, response);
-                break;
-
-            case CODE_SEARCH:
-                SearchRequest request = args.getParcelable(EXTRA_REQUEST);
-                BluetoothSearchManager.search(request, response);
-                break;
-
-            case CODE_STOP_SESARCH:
-                BluetoothSearchManager.stopSearch();
-                break;
-
-            case CODE_INDICATE:
-                BleConnectManager.indicate(mac, service, character, response);
-                break;
-
-            case CODE_CLEAR_REQUEST:
-                int clearType = args.getInt(EXTRA_TYPE, 0);
-                BleConnectManager.clearRequest(mac, clearType);
-                break;
-
-            case CODE_REFRESH_CACHE:
-                BleConnectManager.refreshCache(mac);
-                break;
-        }
-        return true;
+    @Override
+    public IBinder asBinder() {
+        throw new UnsupportedOperationException();
     }
 }
