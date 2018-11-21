@@ -1,8 +1,11 @@
 package com.inuker.bluetooth;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,8 +16,17 @@ import android.widget.Toast;
 
 import com.inuker.bluetooth.library.ConstantsClassic;
 import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
+import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
+import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
+import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.connect.response.ClassicResponse;
+import com.inuker.bluetooth.library.model.BleGattProfile;
+import com.inuker.bluetooth.library.search.SearchResult;
+import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.ByteUtils;
+
+import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
+import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
 public class ClassicStepActivity extends FragmentActivity implements View.OnClickListener {
     private final static String TAG = ClassicStepActivity.class.getName();
@@ -23,11 +35,19 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
 
     private ArrayAdapter<String> mConversationArrayAdapter;
     BluetoothDataParserImpl mBluetoothDataParserImpl;
+    private boolean mConnected;
+    private SearchResult device;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classic_step);
+
+
+        Intent intent = getIntent();
+        device = intent.getParcelableExtra("SearchResult");
+
         mConversationView = (ListView) findViewById(R.id.in);
         Button btnFirstAuth = (Button) findViewById(R.id.btnFirstAuth);
         Button btnSecondAuth = (Button) findViewById(R.id.btnSecondAuth);
@@ -64,7 +84,23 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                 }
             }
         });
+
+
+        ClientManager.getClient().registerConnectStatusListener(device.getAddress(), mConnectStatusListener);
+
+        connectDeviceIfNeeded();
     }
+
+
+    private final BleConnectStatusListener mConnectStatusListener = new BleConnectStatusListener() {
+        @Override
+        public void onConnectStatusChanged(String mac, int status) {
+            BluetoothLog.v(String.format("DeviceDetailActivity onConnectStatusChanged %d in %s",
+                    status, Thread.currentThread().getName()));
+            mConnected = (status == STATUS_CONNECTED);
+            connectDeviceIfNeeded();
+        }
+    };
 
     @Override
     public void onClick(View v) {
@@ -107,9 +143,61 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         });
     }
 
+
+    private void connectDeviceIfNeeded() {
+        if (!mConnected) {
+            connectDevice();
+        }
+    }
+
+
+    private void connectDevice() {
+        showNormalDialog();
+        ClientManager.getClient().connectClassic(device.getAddress(), new ClassicResponse() {
+            @Override
+            public void onResponse(int code, Object data) {
+//                mTvTitle.setText(String.format("%s", device.getAddress()));
+                if (null != alertDialog && alertDialog.isShowing()) {
+                    alertDialog.dismiss();
+                }
+                if (code == ConstantsClassic.CLASSIC_CON_SECCESS) {
+                    Toast.makeText(ClassicStepActivity.this, "蓝牙连接成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ClassicStepActivity.this, "蓝牙连接失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         ClientManager.getClient().disconnectClassic();
+        ClientManager.getClient().unregisterConnectStatusListener(device.getAddress(), mConnectStatusListener);
+        super.onDestroy();
     }
+
+
+    private void showNormalDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("蓝牙连接")
+                .setCancelable(false)
+                .setIcon(R.mipmap.ic_launcher)
+                .setMessage("蓝牙连接中，请稍等...")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //定义自己想要做的操作
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
 }
