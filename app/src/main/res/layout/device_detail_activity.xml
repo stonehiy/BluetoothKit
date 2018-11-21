@@ -10,7 +10,7 @@
         android:textColor="#ffffff"
         android:gravity="center"
         android:layout_alignParentTop="true"
-        android:background="#000000"
+        android:background="@color/colorPrimary"
         android:layout_height="45dp" />
 
     <ListView
