@@ -443,21 +443,5 @@ public class ClassicBluetoothClient {
             }
         }
 
-        private Handler mHandler = new Handler() {
-
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 100:
-                        if (null != mConResponse) {
-                            mConResponse.onResponse(Constants.REQUEST_SUCCESS, null);
-                        }
-                        break;
-                    case 101:
-                        break;
-                }
-
-            }
-        };
     }
 }

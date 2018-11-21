@@ -12,7 +12,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.inuker.bluetooth.library.ConstantsClassic;
+import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
 import com.inuker.bluetooth.library.connect.response.ClassicResponse;
+import com.inuker.bluetooth.library.utils.ByteUtils;
 
 public class ClassicStepActivity extends FragmentActivity implements View.OnClickListener {
     private final static String TAG = ClassicStepActivity.class.getName();
@@ -20,6 +22,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
     private ListView mConversationView;
 
     private ArrayAdapter<String> mConversationArrayAdapter;
+    BluetoothDataParserImpl mBluetoothDataParserImpl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         btnOffChargeStart.setOnClickListener(this);
         btnUnoffChargeStart.setOnClickListener(this);
         btnClose.setOnClickListener(this);
+        mBluetoothDataParserImpl = new BluetoothDataParserImpl(null);
 
 
         // Initialize the array adapter for the conversation thread
@@ -52,6 +56,10 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
             public void onResponse(int code, Object data) {
                 if (code == ConstantsClassic.MESSAGE_READ) {
                     Log.i(TAG, "readClassic data = " + data);
+                    String s1 = new String((byte[]) data);
+                    String s = ByteUtils.byteToString((byte[]) data);
+                    mConversationArrayAdapter.add("Received:" + s1);
+                    mConversationArrayAdapter.notifyDataSetChanged();
 
                 }
             }
@@ -78,22 +86,30 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
             byte[] parms = new byte[]{(byte) 0xA4};
             sendByteData((byte) 0x10, parms, 0);
         } else if (i == R.id.btnClose) {
-
+            ClientManager.getClient().disconnectClassic();
         }
 
     }
 
-
     private void sendByteData(byte command, byte[] params, int serialNum) {
-        ClientManager.getClient().writeClassic(new byte[]{command}, new ClassicResponse() {
+        byte[] bytes = mBluetoothDataParserImpl.encodeToBytes(command, params, serialNum);
+        ClientManager.getClient().writeClassic(bytes, new ClassicResponse() {
             @Override
             public void onResponse(int code, Object data) {
                 if (code == ConstantsClassic.MESSAGE_WRITE) {
+                    String s = ByteUtils.byteToString((byte[]) data);
+                    mConversationArrayAdapter.add("Send:" + s);
+                    mConversationArrayAdapter.notifyDataSetChanged();
+
                     Log.i(TAG, "writeClassic data = " + data);
                 }
             }
         });
+    }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ClientManager.getClient().disconnectClassic();
     }
 }
