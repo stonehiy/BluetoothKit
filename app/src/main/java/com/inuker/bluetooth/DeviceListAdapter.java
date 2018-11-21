@@ -99,6 +99,7 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
                 Intent intent = new Intent();
                 intent.setClass(mContext, DeviceDetailActivity.class);
                 intent.putExtra("mac", result.getAddress());
+                intent.putExtra("mRssi", result.rssi);
                 mContext.startActivity(intent);
             }
         });

@@ -11,6 +11,7 @@ import com.inuker.bluetooth.library.connect.response.BleReadResponse;
 import com.inuker.bluetooth.library.connect.response.BleReadRssiResponse;
 import com.inuker.bluetooth.library.connect.response.BleUnnotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
+import com.inuker.bluetooth.library.connect.response.ClassicResponse;
 import com.inuker.bluetooth.library.receiver.listener.BluetoothBondListener;
 import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
 import com.inuker.bluetooth.library.search.SearchRequest;
@@ -48,9 +49,22 @@ public class BluetoothClient implements IBluetoothClient {
     }
 
     @Override
+    public void connectClassic(String mac, ClassicResponse response) {
+        BluetoothLog.v(String.format("connect %s", mac));
+        response = ProxyUtils.getUIProxy(response);
+        mClient.connectClassic(mac, response);
+    }
+
+    @Override
     public void disconnect(String mac) {
         BluetoothLog.v(String.format("disconnect %s", mac));
         mClient.disconnect(mac);
+    }
+
+    @Override
+    public void disconnectClassic() {
+        BluetoothLog.v(String.format("disconnect classic"));
+        mClient.disconnectClassic();
     }
 
     @Override
@@ -62,12 +76,25 @@ public class BluetoothClient implements IBluetoothClient {
     }
 
     @Override
+    public void readClassic(ClassicResponse response) {
+        response = ProxyUtils.getUIProxy(response);
+        mClient.readClassic(response);
+    }
+
+    @Override
     public void write(String mac, UUID service, UUID character, byte[] value, BleWriteResponse response) {
         BluetoothLog.v(String.format("write character for %s: service = %s, character = %s, value = %s",
                 mac, service, character, ByteUtils.byteToString(value)));
 
         response = ProxyUtils.getUIProxy(response);
         mClient.write(mac, service, character, value, response);
+    }
+
+    @Override
+    public void writeClassic(byte[] value, ClassicResponse response) {
+        response = ProxyUtils.getUIProxy(response);
+        mClient.writeClassic(value, response);
+
     }
 
     @Override

@@ -22,6 +22,7 @@ import com.inuker.bluetooth.library.connect.response.BleReadRssiResponse;
 import com.inuker.bluetooth.library.connect.response.BleUnnotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.connect.response.BluetoothResponse;
+import com.inuker.bluetooth.library.connect.response.ClassicResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.receiver.BluetoothReceiver;
 import com.inuker.bluetooth.library.receiver.listener.BleCharacterChangeListener;
@@ -108,14 +109,16 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
     private HashMap<String, List<BleConnectStatusListener>> mConnectStatusListeners;
     private List<BluetoothStateListener> mBluetoothStateListeners;
     private List<BluetoothBondListener> mBluetoothBondListeners;
+    private ClassicBluetoothClient mClassicBluetoothClient;
 
     private BluetoothClientImpl(Context context) {
+
         mContext = context.getApplicationContext();
         BluetoothContext.set(mContext);
 
         mWorkerThread = new HandlerThread(TAG);
         mWorkerThread.start();
-
+        mClassicBluetoothClient = new ClassicBluetoothClient();
         mWorkerHandler = new Handler(mWorkerThread.getLooper(), this);
 
         mNotifyResponses = new HashMap<String, HashMap<String, List<BleNotifyResponse>>>();
@@ -201,11 +204,29 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
     }
 
     @Override
+    public void connectClassic(String mac, ClassicResponse response) {
+        if (null == mClassicBluetoothClient) {
+            mClassicBluetoothClient = new ClassicBluetoothClient();
+        }
+        mClassicBluetoothClient.setConResponse(response);
+        mClassicBluetoothClient.connect(mac);
+
+    }
+
+    @Override
     public void disconnect(String mac) {
         Bundle args = new Bundle();
         args.putString(EXTRA_MAC, mac);
         safeCallBluetoothApi(CODE_DISCONNECT, args, null);
         clearNotifyListener(mac);
+    }
+
+    @Override
+    public void disconnectClassic() {
+        if (null != mClassicBluetoothClient) {
+            mClassicBluetoothClient.stop();
+        }
+
     }
 
     @Override
@@ -248,6 +269,15 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
     }
 
     @Override
+    public void readClassic(ClassicResponse response) {
+        if (null == mClassicBluetoothClient) {
+            mClassicBluetoothClient = new ClassicBluetoothClient();
+        }
+        mClassicBluetoothClient.setReadResponse(response);
+
+    }
+
+    @Override
     public void write(String mac, UUID service, UUID character, byte[] value, final BleWriteResponse response) {
         Bundle args = new Bundle();
         args.putString(EXTRA_MAC, mac);
@@ -263,6 +293,16 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
                 }
             }
         });
+    }
+
+    @Override
+    public void writeClassic(byte[] value, ClassicResponse response) {
+        if (null == mClassicBluetoothClient) {
+            mClassicBluetoothClient = new ClassicBluetoothClient();
+        }
+        mClassicBluetoothClient.setWriteResponse(response);
+        mClassicBluetoothClient.write(value);
+
     }
 
     @Override
@@ -418,7 +458,7 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
 
     @Override
     public void unindicate(String mac, UUID service, UUID character, BleUnnotifyResponse response) {
-       unnotify(mac, service, character, response);
+        unnotify(mac, service, character, response);
     }
 
     @Override

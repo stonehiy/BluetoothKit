@@ -9,6 +9,7 @@ public class DetailItem {
 
     public static final int TYPE_SERVICE = 0;
     public static final int TYPE_CHARACTER = 1;
+    public static final int TYPE_CLASSIC = 3;//经典蓝牙
 
     public int type;
 
