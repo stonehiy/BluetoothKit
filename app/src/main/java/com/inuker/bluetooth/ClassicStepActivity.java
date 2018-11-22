@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inuker.bluetooth.library.ConstantsClassic;
@@ -49,6 +50,8 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         device = intent.getParcelableExtra("SearchResult");
 
         mConversationView = (ListView) findViewById(R.id.in);
+        TextView title = findViewById(R.id.title);
+        title.setText(device.getName());
         Button btnFirstAuth = (Button) findViewById(R.id.btnFirstAuth);
         Button btnSecondAuth = (Button) findViewById(R.id.btnSecondAuth);
         Button btnChargeStart = (Button) findViewById(R.id.btnChargeStart);
