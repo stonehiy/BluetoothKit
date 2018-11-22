@@ -157,12 +157,12 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
     public CommandResult parseFromBytes(byte[] data) {
 
         //调试中，无时间戳
-        int timeLen = 4;
-        byte[] encryptedData = Arrays.copyOfRange(data, 0, data.length - timeLen);
+//        int timeLen = 4;
+//        byte[] encryptedData = Arrays.copyOfRange(data, 0, data.length - timeLen);
 
-        CommandResult commandResult = parseData(encryptedData);
+        CommandResult commandResult = parseData(data);
         //以下解析数据
-
+        /*
         if (commandResult != null && commandResult.getType() != CommandResult.CommandType.ILLEGAL_DATA) {
             //+4 加上四个字节的时候戳
             byte[] resultBytes = new byte[commandResult.getResultBytes().length + 4];
@@ -175,6 +175,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
             //重新设置数据, 避免外部调用方，不同设备不同业务逻辑处理
             commandResult.setResultBytes(resultBytes);
         }
+        */
         return commandResult;
     }
 
