@@ -257,7 +257,12 @@ public class ClassicBluetoothClient {
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
-            if (mState != STATE_CONNECTED) return;
+            if (mState != STATE_CONNECTED) {
+                if (null != mWriteResponse) {
+                    mWriteResponse.onResponse(ConstantsClassic.CLASSIC_CON_FAILED, null);
+                }
+                return;
+            }
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
@@ -426,7 +431,6 @@ public class ClassicBluetoothClient {
         public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
-
                 // Share the sent message back to the UI Activity
                 mHandler.obtainMessage(ConstantsClassic.MESSAGE_WRITE, -1, -1, buffer)
                         .sendToTarget();

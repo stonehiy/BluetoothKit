@@ -184,6 +184,41 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
         return AESUtil.getInstance().encrypt(buffer, key, iv, offset, dataLength);
     }
 
+
+    @Override
+    public byte[] toBytes(byte command, byte[] params, int serialNum){
+
+
+        int paramLen = (params == null ? 0 : params.length);
+        byte[] data = new byte[4 + paramLen];
+        ByteBuffer buffer = ByteBuffer.wrap(data);
+        //StartFlag
+        buffer.put((byte) 0xFB);
+
+        byte sn = (byte) ((serialNum << 4 & 0xF0) | ((2 + paramLen) & 0x0F));
+
+        //序列号和包长度
+        buffer.put(sn);
+
+        //指令编号
+        buffer.put(command);
+
+        //如果参数不为空，则填充参数
+        if (params != null) {
+            buffer.put(params);
+        }
+
+        //计算校验和
+        byte checksum = 0;
+        for (int i = 1; i < data.length - 1; i++) {
+            checksum ^= data[i];
+        }
+        buffer.put(checksum);
+
+        return data;
+
+    }
+
     @Override
     public byte[] encodeToBytes(byte command, byte[] params, int serialNum) {
 
@@ -213,9 +248,9 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
         }
         buffer.put(checksum);
 
-        //以下数据加密
-        byte[] encryptedData = encrypt(data, key, DEFAULT_IV, 0, data.length); //AesCbc.getInstance().encrypt(data, key, DEFAULT_IV, 1, data.length - 2);
 
+        //以下数据加密
+        byte[] encryptedData = encrypt(data, key, DEFAULT_IV, 0, data.length);
         return encryptedData;
     }
 

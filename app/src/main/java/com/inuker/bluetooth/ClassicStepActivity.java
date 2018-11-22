@@ -56,6 +56,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         Button btnOffChargeStart = (Button) findViewById(R.id.btnOffChargeStart);
         Button btnUnoffChargeStart = (Button) findViewById(R.id.btnUnoffChargeStart);
         Button btnClose = (Button) findViewById(R.id.btnClose);
+        Button btnRecon = (Button) findViewById(R.id.btnRecon);
         btnFirstAuth.setOnClickListener(this);
         btnSecondAuth.setOnClickListener(this);
         btnChargeStart.setOnClickListener(this);
@@ -63,6 +64,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         btnOffChargeStart.setOnClickListener(this);
         btnUnoffChargeStart.setOnClickListener(this);
         btnClose.setOnClickListener(this);
+        btnRecon.setOnClickListener(this);
         mBluetoothDataParserImpl = new BluetoothDataParserImpl(null);
 
 
@@ -123,12 +125,14 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
             sendByteData((byte) 0x10, parms, 0);
         } else if (i == R.id.btnClose) {
             ClientManager.getClient().disconnectClassic();
+        } else if (i == R.id.btnRecon) {
+            connectDeviceIfNeeded();
         }
 
     }
 
     private void sendByteData(byte command, byte[] params, int serialNum) {
-        byte[] bytes = mBluetoothDataParserImpl.encodeToBytes(command, params, serialNum);
+        byte[] bytes = mBluetoothDataParserImpl.toBytes(command, params, serialNum);
         ClientManager.getClient().writeClassic(bytes, new ClassicResponse() {
             @Override
             public void onResponse(int code, Object data) {
@@ -136,8 +140,9 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                     String s = ByteUtils.byteToString((byte[]) data);
                     mConversationArrayAdapter.add("Send:" + s);
                     mConversationArrayAdapter.notifyDataSetChanged();
-
                     Log.i(TAG, "writeClassic data = " + data);
+                } else {
+                    Toast.makeText(ClassicStepActivity.this, "蓝牙未连接，请连接蓝牙", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -164,6 +169,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                     Toast.makeText(ClassicStepActivity.this, "蓝牙连接成功", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(ClassicStepActivity.this, "蓝牙连接失败", Toast.LENGTH_SHORT).show();
+                    showErrorDialog();
                 }
             }
         });
@@ -181,12 +187,20 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("蓝牙连接")
                 .setCancelable(false)
-                .setIcon(R.mipmap.ic_launcher)
-                .setMessage("蓝牙连接中，请稍等...")
+                .setMessage("蓝牙连接中，请稍等...");
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void showErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("蓝牙连接失败")
+                .setCancelable(false)
+                .setMessage("蓝牙连接失败，是否重新连接")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //定义自己想要做的操作
+                        connectDeviceIfNeeded();
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -195,8 +209,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                     }
                 });
 
-        alertDialog = builder.create();
-        alertDialog.show();
+        builder.create().show();
     }
 
 
