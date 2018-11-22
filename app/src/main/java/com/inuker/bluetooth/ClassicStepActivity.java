@@ -140,7 +140,8 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                     String s = ByteUtils.byteToString((byte[]) data);
                     mConversationArrayAdapter.add("Send:" + s);
                     mConversationArrayAdapter.notifyDataSetChanged();
-                    Log.i(TAG, "writeClassic data = " + data);
+                    Log.i(TAG, "writeClassic data = " + s);
+                    Log.i(TAG, "writeClassic data length = " + ((byte[]) data).length);
                 } else {
                     Toast.makeText(ClassicStepActivity.this, "蓝牙未连接，请连接蓝牙", Toast.LENGTH_SHORT).show();
                 }
