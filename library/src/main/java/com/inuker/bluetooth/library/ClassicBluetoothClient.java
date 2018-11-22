@@ -22,6 +22,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 
 import com.inuker.bluetooth.library.connect.response.ClassicResponse;
@@ -30,6 +31,7 @@ import com.inuker.bluetooth.library.utils.BluetoothLog;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -89,7 +91,10 @@ public class ClassicBluetoothClient {
 
                 case ConstantsClassic.MESSAGE_READ:
                     if (null != mReadResponse) {
-                        mReadResponse.onResponse(ConstantsClassic.MESSAGE_READ, msg.obj);
+                        byte[] buf = (byte[]) msg.obj;
+                        byte[] bytes = Arrays.copyOf(buf, msg.arg1);
+//                        String readMessage = new String(readBuf, 0, msg.arg1);
+                        mReadResponse.onResponse(ConstantsClassic.MESSAGE_READ, bytes);
                     }
                     break;
                 case ConstantsClassic.MESSAGE_WRITE:
@@ -409,6 +414,7 @@ public class ClassicBluetoothClient {
                 try {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
+                    Log.i(TAG, "read bytes = " + bytes);
 
                     // Send the obtained bytes to the UI Activity
                     mHandler.obtainMessage(ConstantsClassic.MESSAGE_READ, bytes, -1, buffer)

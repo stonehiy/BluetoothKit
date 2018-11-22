@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.inuker.bluetooth.library.ConstantsClassic;
 import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
+import com.inuker.bluetooth.library.beacon.CommandResult;
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
@@ -39,6 +40,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
     private boolean mConnected;
     private SearchResult device;
     private AlertDialog alertDialog;
+    private CommandResult commandResult;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,11 +82,14 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
             @Override
             public void onResponse(int code, Object data) {
                 if (code == ConstantsClassic.MESSAGE_READ) {
-                    Log.i(TAG, "readClassic data = " + data);
-                    String s1 = new String((byte[]) data);
-                    String s = ByteUtils.byteToString((byte[]) data);
-                    mConversationArrayAdapter.add("Received:" + s1);
+                    byte[] bytes = (byte[]) data;
+                    String hexStr = ByteUtils.byteToString(bytes);
+//                    ByteUtils.stringToBytes()
+                    mConversationArrayAdapter.add("Received:" + hexStr);
                     mConversationArrayAdapter.notifyDataSetChanged();
+                    //测试的时候使用
+                    commandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
+
 
                 }
             }
@@ -113,7 +118,9 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         if (i == R.id.btnFirstAuth) {
             sendByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
         } else if (i == R.id.btnSecondAuth) {
-            sendByteData((byte) 0x32, null, 0);
+            if (null != commandResult) {
+                sendByteData((byte) 0x32, commandResult.getSecondCode(), 0);
+            }
         } else if (i == R.id.btnChargeStart) {
             byte[] parms = new byte[]{(byte) 0xA1};
             sendByteData((byte) 0x10, parms, 0);

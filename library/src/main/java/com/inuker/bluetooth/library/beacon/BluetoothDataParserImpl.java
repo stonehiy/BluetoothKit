@@ -186,7 +186,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
 
 
     @Override
-    public byte[] toBytes(byte command, byte[] params, int serialNum){
+    public byte[] toBytes(byte command, byte[] params, int serialNum) {
 
 
         int paramLen = (params == null ? 0 : params.length);
