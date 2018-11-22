@@ -61,7 +61,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
         }
 
         //判断头尾
-        if (buffer[0] != (byte) 0xFB) {
+        if (buffer[0] != (byte) 0x64) {
             result.setType(CommandResult.CommandType.ILLEGAL_DATA);
             result.setTypeDesc("数据格式错误，起始位和结束位校验失败");
             return result;
@@ -193,7 +193,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
         byte[] data = new byte[4 + paramLen];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         //StartFlag
-        buffer.put((byte) 0xFB);
+        buffer.put((byte) 0x64);
 
         byte sn = (byte) ((serialNum << 4 & 0xF0) | ((2 + paramLen) & 0x0F));
 
@@ -226,7 +226,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
         byte[] data = new byte[4 + paramLen];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         //StartFlag
-        buffer.put((byte) 0xFB);
+        buffer.put((byte) 0x64);
 
         byte sn = (byte) ((serialNum << 4 & 0xF0) | ((2 + paramLen) & 0x0F));
 
