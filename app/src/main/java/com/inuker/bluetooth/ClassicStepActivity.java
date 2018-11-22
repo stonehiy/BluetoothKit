@@ -111,7 +111,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btnFirstAuth) {
-            sendByteData((byte) 0x31, null, 0);
+            sendByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
         } else if (i == R.id.btnSecondAuth) {
             sendByteData((byte) 0x32, null, 0);
         } else if (i == R.id.btnChargeStart) {
