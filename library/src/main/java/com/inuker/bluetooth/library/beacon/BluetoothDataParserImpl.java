@@ -44,19 +44,19 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
     /**
      * 解析密文和数据
      *
-     * @param data
+     * @param buffer
      * @return
      */
-    private CommandResult parseData(byte[] data) {
+    private CommandResult parseData(byte[] buffer) {
         CommandResult result = new CommandResult();
 
         //先通过AES解f密, 从下标1，开始解密, 长度为整包减去头尾2字节
-        byte[] buffer = decrypt(data, key, DEFAULT_IV, 0, data.length);
+//        byte[] buffer = decrypt(data, key, DEFAULT_IV, 0, data.length);
 
         if (buffer == null) {
             result.setType(CommandResult.CommandType.ILLEGAL_DATA);
             result.setTypeDesc("数据解密失败");
-            BluetoothLog.i(TAG + "解密数据失败 data - " + data);
+            BluetoothLog.i(TAG + "解密数据失败 data - " + buffer);
             return result;
         }
 
