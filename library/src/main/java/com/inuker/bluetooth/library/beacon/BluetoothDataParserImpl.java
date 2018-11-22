@@ -42,7 +42,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
     }
 
     /**
-     * 解析密文和数据
+     * 解析数据
      *
      * @param buffer
      * @return
