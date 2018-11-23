@@ -20,7 +20,6 @@ import com.inuker.bluetooth.library.search.response.SearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.ByteUtils;
 
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
