@@ -88,6 +88,14 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                                 mConversationArrayAdapter.add("auth received:" + hexStr);
                             } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
                                 mConversationArrayAdapter.add("second auth received:" + hexStr);
+                            } else if (commandResult.getType().code == CommandResult.CommandType.CHARGE_START_RES.code) {
+                                mConversationArrayAdapter.add("received:" + hexStr);
+                            } else if (commandResult.getType().code == CommandResult.CommandType.CHARGE_STOP_RES.code) {
+                                mConversationArrayAdapter.add("received:" + hexStr);
+                            } else if (commandResult.getType().code == CommandResult.CommandType.OFF_CHARGE_START.code) {
+                                mConversationArrayAdapter.add("received:" + hexStr);
+                            } else if (commandResult.getType().code == CommandResult.CommandType.UNOFF_CHARGE_START.code) {
+                                mConversationArrayAdapter.add("received:" + hexStr);
                             }
                             mConversationArrayAdapter.add(commandResult.getDesc());
                             mConversationArrayAdapter.notifyDataSetChanged();
