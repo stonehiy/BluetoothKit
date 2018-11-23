@@ -107,7 +107,7 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
                     Intent intent = new Intent(mContext, ClassicStepActivity.class);
                     intent.putExtra("SearchResult", result);
                     mContext.startActivity(intent);
-                } else {
+                } else if (device.getType() == BluetoothDevice.DEVICE_TYPE_LE) {
                     Intent intent = new Intent();
                     intent.setClass(mContext, DeviceDetailActivity.class);
                     intent.putExtra("mac", result.getAddress());
@@ -115,6 +115,19 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
                     mContext.startActivity(intent);
                 }
 
+            }
+        });
+        holder.btnProduction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                ClassicProductionActivity
+                if (device.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+                    Intent intent = new Intent(mContext, ClassicProductionActivity.class);
+                    intent.putExtra("SearchResult", result);
+                    mContext.startActivity(intent);
+                } else if (device.getType() == BluetoothDevice.DEVICE_TYPE_LE) {
+
+                }
             }
         });
 

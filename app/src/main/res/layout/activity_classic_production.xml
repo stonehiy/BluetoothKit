@@ -51,16 +51,24 @@
                 android:orientation="vertical">
 
                 <Button
+                    android:id="@+id/btnRecon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="连接蓝牙" />
+
+                <Button
                     android:id="@+id/btnFirstAuth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="首次鉴权" />
+                    android:text="首次鉴权"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/btnSecondAuth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="二次鉴权" />
+                    android:text="二次鉴权"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/btnChargeStart"
@@ -98,11 +106,7 @@
                     android:layout_height="wrap_content"
                     android:text="断开连接" />
 
-                <Button
-                    android:id="@+id/btnRecon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="重新连接" />
+
             </LinearLayout>
 
 

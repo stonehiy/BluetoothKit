@@ -35,12 +35,16 @@ public class CommandResult {
         /**
          * 启用离线自动充电
          */
-        OFF_CHARGE_START(6),
+        OFF_CHARGE_START(5),
 
         /**
          * 禁止离线自动充电
          */
-        UNOFF_CHARGE_START(6);
+        UNOFF_CHARGE_START(6),
+        /**
+         * 设置桩号
+         */
+        SET_PILE_NO(7);
 
         public final int code;
 

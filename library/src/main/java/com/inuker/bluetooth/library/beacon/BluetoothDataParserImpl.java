@@ -165,28 +165,36 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
                     }
                 } else if (resultType == (byte) 0xA3) {
                     result.setType(CommandResult.CommandType.OFF_CHARGE_START);
+                    result.setTypeDesc("启用离线自动充电");
                     if (0x01 == resultCode) {
                         result.setResult(true);
                         result.setDesc("启用离线自动充电成功");
-                        result.setTypeDesc("启用离线自动充电");
                     } else {
                         result.setResult(false);
                         result.setDesc("启用离线自动充电失败");
-                        result.setTypeDesc("启用离线自动充电");
                     }
 
                 } else if (resultType == (byte) 0xA4) {
                     result.setType(CommandResult.CommandType.UNOFF_CHARGE_START);
+                    result.setTypeDesc("设置电桩号");
                     if (0x01 == resultCode) {
                         result.setResult(true);
                         result.setDesc("禁止离线自动充电成功");
-                        result.setTypeDesc("禁止离线自动充电");
                     } else {
                         result.setResult(false);
                         result.setDesc("禁止离线自动充电失败");
-                        result.setTypeDesc("禁止离线自动充电");
                     }
 
+                } else if (resultType == (byte) 0xA5) {
+                    result.setType(CommandResult.CommandType.SET_PILE_NO);
+                    result.setTypeDesc("设置电桩号");
+                    if (0x01 == resultCode) {
+                        result.setResult(true);
+                        result.setDesc("设置电桩号成功");
+                    } else {
+                        result.setResult(false);
+                        result.setDesc("设置电桩号失败");
+                    }
                 }
                 break;
             default:

@@ -35,7 +35,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
     BluetoothDataParserImpl mBluetoothDataParserImpl;
     private boolean mConnected;
     private SearchResult device;
-    private AlertDialog alertDialog;
+    private AlertDialog mConAlertDialog;
     private CommandResult mCommandResult;
 
     @Override
@@ -96,6 +96,8 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                                 mConversationArrayAdapter.add("received:" + hexStr);
                             } else if (commandResult.getType().code == CommandResult.CommandType.UNOFF_CHARGE_START.code) {
                                 mConversationArrayAdapter.add("received:" + hexStr);
+                            } else if (commandResult.getType().code == CommandResult.CommandType.SET_PILE_NO.code) {
+                                mConversationArrayAdapter.add("received:" + hexStr);
                             }
                             mConversationArrayAdapter.add(commandResult.getDesc());
                             mConversationArrayAdapter.notifyDataSetChanged();
@@ -152,6 +154,8 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         } else if (i == R.id.btnUnoffChargeStart) {
             byte[] parms = new byte[]{(byte) 0xA4};
             sendByteData((byte) 0x10, parms, 0);
+        } else if (i == R.id.btnPileNo) {
+            showSetPileNo();
         } else if (i == R.id.btnClose) {
             ClientManager.getClient().disconnectClassic();
         } else if (i == R.id.btnRecon) {
@@ -188,13 +192,13 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
 
     private void connectDevice() {
         ClientManager.getClient().disconnectClassic();
-        showNormalDialog();
+        showConnectDialog();
         ClientManager.getClient().connectClassic(device.getAddress(), new ClassicResponse() {
             @Override
             public void onResponse(int code, Object data) {
 //                mTvTitle.setText(String.format("%s", device.getAddress()));
-                if (null != alertDialog && alertDialog.isShowing()) {
-                    alertDialog.dismiss();
+                if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
+                    mConAlertDialog.dismiss();
                 }
                 if (code == ConstantsClassic.CLASSIC_CON_SECCESS) {
                     Toast.makeText(ClassicStepActivity.this, "蓝牙连接成功", Toast.LENGTH_SHORT).show();
@@ -214,13 +218,13 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
     }
 
 
-    private void showNormalDialog() {
+    private void showConnectDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("蓝牙连接")
                 .setCancelable(false)
                 .setMessage("蓝牙连接中，请稍等...");
-        alertDialog = builder.create();
-        alertDialog.show();
+        mConAlertDialog = builder.create();
+        mConAlertDialog.show();
     }
 
     private void showErrorDialog() {
@@ -241,6 +245,69 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                 });
 
         builder.create().show();
+    }
+
+    /**
+     * 设置桩号
+     */
+    private void showSetPileNo() {
+        // 创建对话框构建器
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // 获取布局
+        View view2 = View.inflate(this, R.layout.dialog_set_pile_no, null);
+        // 获取布局中的控件
+        final EditText etPileNo = (EditText) view2.findViewById(R.id.etPileNo);
+        final Button btnConfirm = (Button) view2.findViewById(R.id.btnConfirm);
+        final Button btnCancel = (Button) view2.findViewById(R.id.btnCancel);
+        // 创建对话框
+        final AlertDialog alertDialog = builder
+                .setCancelable(false)
+                .create();
+        alertDialog.show();
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pileNo = etPileNo.getText().toString().trim();
+                if (null == pileNo) {
+                    Toast.makeText(ClassicStepActivity.this, "请输入16位数字桩号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (16 != pileNo.length()) {
+                    Toast.makeText(ClassicStepActivity.this, "请输入16位数字桩号", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                byte[] b1 = new byte[]{(byte) 0xA5};
+                byte[] b2 = ByteUtils.stringToBytes(pileNo);
+                byte[] bytes = byteMerger(b1, b2);
+                sendByteData((byte) 0x10, bytes, 0);
+                alertDialog.dismiss();
+
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+    }
+
+
+    /**
+     * byte[] 合并
+     * System.arraycopy()方法
+     *
+     * @param bt1
+     * @param bt2
+     * @return
+     */
+    public static byte[] byteMerger(byte[] bt1, byte[] bt2) {
+        byte[] bt3 = new byte[bt1.length + bt2.length];
+        System.arraycopy(bt1, 0, bt3, 0, bt1.length);
+        System.arraycopy(bt2, 0, bt3, bt1.length, bt2.length);
+        return bt3;
     }
 
 

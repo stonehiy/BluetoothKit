@@ -42,6 +42,9 @@
         <activity
             android:name=".TestActivity1"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ClassicProductionActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ClassicStepActivity"
