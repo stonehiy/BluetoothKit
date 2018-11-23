@@ -3,6 +3,7 @@ package com.inuker.bluetooth.library.beacon;
 
 import com.inuker.bluetooth.library.utils.AESUtil;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
+import com.inuker.bluetooth.library.utils.ByteUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -55,15 +56,15 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
 
         if (buffer == null) {
             result.setType(CommandResult.CommandType.ILLEGAL_DATA);
-            result.setTypeDesc("数据为空");
-            BluetoothLog.i(TAG + "解密数据失败 data - " + buffer);
+            result.setDesc("数据为空");
+            BluetoothLog.i(TAG + "数据为空");
             return result;
         }
 
         //判断头尾
         if (buffer[0] != (byte) 0x64) {
             result.setType(CommandResult.CommandType.ILLEGAL_DATA);
-            result.setTypeDesc("数据格式错误，起始位和结束位校验失败 data - " + buffer);
+            result.setDesc("数据格式错误，起始位和结束位校验失败 data = " + ByteUtils.byteToString(buffer));
             return result;
         }
 
@@ -76,7 +77,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
         //判断校验码是否相等
         if (buffer[buffer.length - 1] != checksum) {
             result.setType(CommandResult.CommandType.ILLEGAL_DATA);
-            result.setTypeDesc("校验码错误");
+            result.setDesc("校验码错误 data = " + ByteUtils.byteToString(buffer));
             return result;
         }
 

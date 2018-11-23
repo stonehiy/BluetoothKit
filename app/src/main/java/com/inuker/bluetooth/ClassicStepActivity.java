@@ -100,8 +100,11 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                             mConversationArrayAdapter.add(commandResult.getDesc());
                             mConversationArrayAdapter.notifyDataSetChanged();
                         } else {
-                            Toast.makeText(ClassicStepActivity.this, commandResult.getTypeDesc() + commandResult.getDesc(), Toast.LENGTH_SHORT).show();
+                            mConversationArrayAdapter.add("error received:" + hexStr);
+                            mConversationArrayAdapter.add(commandResult.getDesc());
+                            mConversationArrayAdapter.notifyDataSetChanged();
                         }
+
                     }
 
 
