@@ -55,7 +55,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
 
         if (buffer == null) {
             result.setType(CommandResult.CommandType.ILLEGAL_DATA);
-            result.setTypeDesc("数据解密失败");
+            result.setTypeDesc("数据为空");
             BluetoothLog.i(TAG + "解密数据失败 data - " + buffer);
             return result;
         }
@@ -63,7 +63,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
         //判断头尾
         if (buffer[0] != (byte) 0x64) {
             result.setType(CommandResult.CommandType.ILLEGAL_DATA);
-            result.setTypeDesc("数据格式错误，起始位和结束位校验失败");
+            result.setTypeDesc("数据格式错误，起始位和结束位校验失败 data - " + buffer);
             return result;
         }
 
