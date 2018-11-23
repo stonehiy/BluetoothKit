@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
 
     private void searchDevice() {
         SearchRequest request = new SearchRequest.Builder()
-                .searchBluetoothLeDevice(5000, 2)// // 先扫BLE设备3次，每次3s
+//                .searchBluetoothLeDevice(5000, 2)// // 先扫BLE设备3次，每次3s
                 .searchBluetoothClassicDevice(5000, 2) // 再扫经典蓝牙5s
                 .build();
 

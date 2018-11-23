@@ -73,14 +73,13 @@ public class ClientManager implements SearchResponse, ClassicResponse {
 
     public void onScanner(String btName) {
         this.mBtName = btName;
+        showScannerDialog();
+        searchDevice();
         ClientManager.getClient().registerBluetoothStateListener(new BluetoothStateListener() {
             @Override
             public void onBluetoothStateChanged(boolean openOrClosed) {
                 BluetoothLog.v(String.format("onBluetoothStateChanged %b", openOrClosed));
-                if (openOrClosed) {
-                    showScannerDialog();
-                    searchDevice();
-                }
+
             }
         });
 
@@ -98,7 +97,9 @@ public class ClientManager implements SearchResponse, ClassicResponse {
 
     public void onCreateConnect() {
         ClientManager.getClient().stopSearch();
-        ClientManager.getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+        if (null != mDevice) {
+            ClientManager.getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+        }
         connectDeviceIfNeeded();
 
     }
@@ -110,7 +111,9 @@ public class ClientManager implements SearchResponse, ClassicResponse {
     public void onDestroy() {
         ClientManager.getClient().stopSearch();
         ClientManager.getClient().disconnectClassic();
-        ClientManager.getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+        if (null != mDevice) {
+            ClientManager.getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+        }
         mBtName = null;
         mClientManager = null;
         mClient = null;
@@ -174,6 +177,9 @@ public class ClientManager implements SearchResponse, ClassicResponse {
         ClientManager.getClient().readClassic(this);
         showConnectDialog();
         ClientManager.getClient().disconnectClassic();
+        if (null == mDevice) {
+            return;
+        }
         ClientManager.getClient().connectClassic(mDevice.getAddress(), new ClassicResponse() {
             @Override
             public void onResponse(int code, Object data) {

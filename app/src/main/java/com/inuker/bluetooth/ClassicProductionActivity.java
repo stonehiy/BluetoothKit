@@ -97,7 +97,7 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
         } else if (i == R.id.btnClose) {
             ClientManager.getClient().disconnectClassic();
         } else if (i == R.id.btnRecon) {
-            mClientManager.onCreateConnect();
+            mClientManager.onScanner(device.getName());
         }
 
     }
