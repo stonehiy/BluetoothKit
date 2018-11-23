@@ -25,6 +25,7 @@ import android.os.Message;
 import android.util.Log;
 
 
+import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.response.ClassicResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 
@@ -66,6 +67,7 @@ public class ClassicBluetoothClient {
     private ClassicResponse mConResponse;
     private ClassicResponse mReadResponse;
     private ClassicResponse mWriteResponse;
+    private BleConnectStatusListener mBleConnectStatusListener;
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -100,6 +102,18 @@ public class ClassicBluetoothClient {
                 case ConstantsClassic.MESSAGE_WRITE:
                     if (null != mWriteResponse) {
                         mWriteResponse.onResponse(ConstantsClassic.MESSAGE_WRITE, msg.obj);
+                    }
+                    break;
+                case ConstantsClassic.MESSAGE_STATE_CHANGE:
+                    if (null != mBleConnectStatusListener) {
+//                        public static final int STATUS_CONNECTED = 0x10;
+//                        public static final int STATUS_DISCONNECTED = 0x20;
+                        if (3 == msg.arg1) {
+                            mBleConnectStatusListener.onConnectStatusChanged(mAdapter.getAddress(), 0x10);
+                        } else if (0 == msg.arg1) {
+                            mBleConnectStatusListener.onConnectStatusChanged(mAdapter.getAddress(), 0x20);
+                        }
+
                     }
                     break;
             }
