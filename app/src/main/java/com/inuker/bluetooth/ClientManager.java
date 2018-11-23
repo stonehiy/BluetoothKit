@@ -266,22 +266,17 @@ public class ClientManager implements SearchResponse, ClassicResponse {
                         Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    if (commandResult.getType().code == CommandResult.CommandType.AUTH.code) {
-                        showErrorDialog();
-                        Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
-                    } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
-                        showErrorDialog();
-                        Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
-                    } else if (commandResult.getType().code == CommandResult.CommandType.CHARGE_START_RES.code) {
-                        Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
-                    } else if (commandResult.getType().code == CommandResult.CommandType.CHARGE_STOP_RES.code) {
-                        Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
-                    } else if (commandResult.getType().code == CommandResult.CommandType.OFF_CHARGE_START.code) {
-                        Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
-                    } else if (commandResult.getType().code == CommandResult.CommandType.UNOFF_CHARGE_START.code) {
-                        Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
-                    } else if (commandResult.getType().code == CommandResult.CommandType.SET_PILE_NO.code) {
-                        Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
+                    if (commandResult.getType().code != CommandResult.CommandType.ILLEGAL_DATA.code) {
+                        if (commandResult.getType().code == CommandResult.CommandType.AUTH.code) {
+                            showErrorDialog();
+                            Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
+                        } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
+                            showErrorDialog();
+                            Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 }
 
