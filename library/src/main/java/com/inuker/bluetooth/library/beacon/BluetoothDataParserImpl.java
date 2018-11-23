@@ -138,10 +138,55 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
             0xA4—禁止离线自动充电
             */
             case 0x10:
-                result.setType(CommandResult.CommandType.ILLEGAL_DATA);
-                result.setTypeDesc("状态查询");
-                result.setType(CommandResult.CommandType.ILLEGAL_DATA);
-                result.setResult(true);
+                byte resultType = bb.get();
+                byte resultCode = bb.get();
+                if (resultType == (byte) 0xA1) {
+                    result.setType(CommandResult.CommandType.CHARGE_START_RES);
+                    if (0x11 == resultCode) {
+                        result.setResult(true);
+                        result.setDesc("启动充电成功");
+                        result.setTypeDesc("启动充电");
+                    } else {
+                        result.setResult(false);
+                        result.setDesc("启动充电失败");
+                        result.setTypeDesc("启动充电");
+                    }
+                } else if (resultType == (byte) 0xA2) {
+                    result.setType(CommandResult.CommandType.CHARGE_STOP_RES);
+                    if (0x11 == resultCode) {
+                        result.setResult(true);
+                        result.setDesc("停止充电成功");
+                        result.setTypeDesc("停止充电");
+                    } else {
+                        result.setResult(false);
+                        result.setDesc("停止充电失败");
+                        result.setTypeDesc("停止充电");
+                    }
+                } else if (resultType == (byte) 0xA3) {
+                    result.setType(CommandResult.CommandType.OFF_CHARGE_START);
+                    if (0x11 == resultCode) {
+                        result.setResult(true);
+                        result.setDesc("启用离线自动充电成功");
+                        result.setTypeDesc("启用离线自动充电");
+                    } else {
+                        result.setResult(false);
+                        result.setDesc("启用离线自动充电失败");
+                        result.setTypeDesc("启用离线自动充电");
+                    }
+
+                } else if (resultType == (byte) 0xA4) {
+                    result.setType(CommandResult.CommandType.UNOFF_CHARGE_START);
+                    if (0x11 == resultCode) {
+                        result.setResult(true);
+                        result.setDesc("禁止离线自动充电成功");
+                        result.setTypeDesc("禁止离线自动充电");
+                    } else {
+                        result.setResult(false);
+                        result.setDesc("禁止离线自动充电失败");
+                        result.setTypeDesc("禁止离线自动充电");
+                    }
+
+                }
                 break;
             default:
                 result.setType(CommandResult.CommandType.ILLEGAL_DATA);

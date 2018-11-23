@@ -19,15 +19,11 @@ import com.inuker.bluetooth.library.ConstantsClassic;
 import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
 import com.inuker.bluetooth.library.beacon.CommandResult;
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
-import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
-import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.connect.response.ClassicResponse;
-import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.ByteUtils;
 
-import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
 public class ClassicStepActivity extends FragmentActivity implements View.OnClickListener {
@@ -40,7 +36,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
     private boolean mConnected;
     private SearchResult device;
     private AlertDialog alertDialog;
-    private CommandResult commandResult;
+    private CommandResult mCommandResult;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,17 +80,16 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                 if (code == ConstantsClassic.MESSAGE_READ) {
                     byte[] bytes = (byte[]) data;
                     String hexStr = ByteUtils.byteToString(bytes);
-//                    ByteUtils.stringToBytes()
-                    commandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
+                    CommandResult commandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
                     if (null != commandResult) {
                         if (commandResult.isResult()) {
                             if (commandResult.getType().code == CommandResult.CommandType.AUTH.code) {
+                                mCommandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
                                 mConversationArrayAdapter.add("auth received:" + hexStr);
-                                mConversationArrayAdapter.add("首次鉴权成功");
                             } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
                                 mConversationArrayAdapter.add("second auth received:" + hexStr);
-                                mConversationArrayAdapter.add("二次鉴权成功");
                             }
+                            mConversationArrayAdapter.add(commandResult.getDesc());
                             mConversationArrayAdapter.notifyDataSetChanged();
                         } else {
                             Toast.makeText(ClassicStepActivity.this, commandResult.getTypeDesc() + commandResult.getDesc(), Toast.LENGTH_SHORT).show();
@@ -129,9 +124,9 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         if (i == R.id.btnFirstAuth) {
             sendByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
         } else if (i == R.id.btnSecondAuth) {
-            if (null != commandResult) {
-                sendByteData((byte) 0x32, commandResult.getSecondCode(), 0);
-            }else {
+            if (null != mCommandResult) {
+                sendByteData((byte) 0x32, mCommandResult.getSecondCode(), 0);
+            } else {
                 Toast.makeText(ClassicStepActivity.this, "请先首次鉴权", Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.btnChargeStart) {

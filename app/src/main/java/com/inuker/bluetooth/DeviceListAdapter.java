@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.inuker.bluetooth.library.beacon.Beacon;
@@ -64,6 +65,8 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
         TextView mac;
         TextView rssi;
         TextView adv;
+        Button btnDev;
+        Button btnProduction;
     }
 
     @Override
@@ -79,6 +82,8 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
             holder.mac = (TextView) convertView.findViewById(R.id.mac);
             holder.rssi = (TextView) convertView.findViewById(R.id.rssi);
             holder.adv = (TextView) convertView.findViewById(R.id.adv);
+            holder.btnDev = (Button) convertView.findViewById(R.id.btnDev);
+            holder.btnProduction = (Button) convertView.findViewById(R.id.btnProduction);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -94,7 +99,7 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
         holder.adv.setText(beacon.toString());
         final BluetoothDevice device = result.device;
 
-        convertView.setOnClickListener(new View.OnClickListener() {
+        holder.btnDev.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
