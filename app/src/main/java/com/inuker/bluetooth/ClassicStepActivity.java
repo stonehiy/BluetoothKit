@@ -92,7 +92,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                                 mConversationArrayAdapter.add("auth received:" + hexStr);
                                 mConversationArrayAdapter.add("首次鉴权成功");
                             } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
-                                mConversationArrayAdapter.add("second_auth received:" + hexStr);
+                                mConversationArrayAdapter.add("second auth received:" + hexStr);
                                 mConversationArrayAdapter.add("二次鉴权成功");
                             }
                             mConversationArrayAdapter.notifyDataSetChanged();
@@ -131,6 +131,8 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         } else if (i == R.id.btnSecondAuth) {
             if (null != commandResult) {
                 sendByteData((byte) 0x32, commandResult.getSecondCode(), 0);
+            }else {
+                Toast.makeText(ClassicStepActivity.this, "请先首次鉴权", Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.btnChargeStart) {
             byte[] parms = new byte[]{(byte) 0xA1};
