@@ -43,7 +43,6 @@ public class DeviceDetailActivity extends Activity {
     private BluetoothDevice mDevice;
 
     private boolean mConnected;
-    private int mRssi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,6 @@ public class DeviceDetailActivity extends Activity {
         Intent intent = getIntent();
         String mac = intent.getStringExtra("mac");
         mResult = intent.getParcelableExtra("device");
-        mRssi = intent.getIntExtra("mRssi", 0);
 
         mDevice = BluetoothUtils.getRemoteDevice(mac);
 
@@ -111,47 +109,28 @@ public class DeviceDetailActivity extends Activity {
         mPbar.setVisibility(View.VISIBLE);
         mListView.setVisibility(View.GONE);
 
-        if (0 != mRssi) {
-            BleConnectOptions options = new BleConnectOptions.Builder()
-                    .setConnectRetry(3)
-                    .setConnectTimeout(20000)
-                    .setServiceDiscoverRetry(3)
-                    .setServiceDiscoverTimeout(10000)
-                    .build();
+        BleConnectOptions options = new BleConnectOptions.Builder()
+                .setConnectRetry(3)
+                .setConnectTimeout(20000)
+                .setServiceDiscoverRetry(3)
+                .setServiceDiscoverTimeout(10000)
+                .build();
 
-            ClientManager.getClient().connect(mDevice.getAddress(), options, new BleConnectResponse() {
-                @Override
-                public void onResponse(int code, BleGattProfile profile) {
-                    BluetoothLog.v(String.format("profile:\n%s", profile));
-                    mTvTitle.setText(String.format("%s", mDevice.getAddress()));
-                    mPbar.setVisibility(View.GONE);
-                    mListView.setVisibility(View.VISIBLE);
+        ClientManager.getClient().connect(mDevice.getAddress(), options, new BleConnectResponse() {
+            @Override
+            public void onResponse(int code, BleGattProfile profile) {
+                BluetoothLog.v(String.format("profile:\n%s", profile));
+                mTvTitle.setText(String.format("%s", mDevice.getAddress()));
+                mPbar.setVisibility(View.GONE);
+                mListView.setVisibility(View.VISIBLE);
 
-                    if (code == REQUEST_SUCCESS) {
-                        mAdapter.setGattProfile(profile);
-                    }
+                if (code == REQUEST_SUCCESS) {
+                    mAdapter.setGattProfile(profile);
                 }
+            }
 
-            });
-        } else {
-            ClientManager.getClient().connectClassic(mDevice.getAddress(), new ClassicResponse() {
-                @Override
-                public void onResponse(int code, Object data) {
-                    mTvTitle.setText(String.format("%s", mDevice.getAddress()));
-                    mPbar.setVisibility(View.GONE);
-                    mListView.setVisibility(View.VISIBLE);
-                    if (code == ConstantsClassic.CLASSIC_CON_SECCESS) {
-                        Toast.makeText(DeviceDetailActivity.this, "经典蓝牙连接成功", Toast.LENGTH_SHORT);
-                        Intent intent = new Intent(DeviceDetailActivity.this, ClassicStepActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(DeviceDetailActivity.this, "经典蓝牙连接失败", Toast.LENGTH_SHORT);
-                        finish();
-                    }
-                }
-            });
-        }
+        });
+
     }
 
     private void connectDeviceIfNeeded() {

@@ -85,10 +85,21 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
                     byte[] bytes = (byte[]) data;
                     String hexStr = ByteUtils.byteToString(bytes);
 //                    ByteUtils.stringToBytes()
-                    mConversationArrayAdapter.add("Received:" + hexStr);
-                    mConversationArrayAdapter.notifyDataSetChanged();
-                    //测试的时候使用
                     commandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
+                    if (null != commandResult) {
+                        if (commandResult.isResult()) {
+                            if (commandResult.getType().code == CommandResult.CommandType.AUTH.code) {
+                                mConversationArrayAdapter.add("auth received:" + hexStr);
+                                mConversationArrayAdapter.add("首次鉴权成功");
+                            } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
+                                mConversationArrayAdapter.add("second_auth received:" + hexStr);
+                                mConversationArrayAdapter.add("二次鉴权成功");
+                            }
+                            mConversationArrayAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(ClassicStepActivity.this, commandResult.getTypeDesc() + commandResult.getDesc(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
 
                 }
@@ -168,6 +179,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
 
 
     private void connectDevice() {
+        ClientManager.getClient().disconnectClassic();
         showNormalDialog();
         ClientManager.getClient().connectClassic(device.getAddress(), new ClassicResponse() {
             @Override

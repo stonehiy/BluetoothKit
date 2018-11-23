@@ -1,5 +1,6 @@
 package com.inuker.bluetooth;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -91,12 +92,13 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
 
         Beacon beacon = new Beacon(result.scanRecord);
         holder.adv.setText(beacon.toString());
+        final BluetoothDevice device = result.device;
 
         convertView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if (0 == result.rssi) {
+                if (device.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
                     Intent intent = new Intent(mContext, ClassicStepActivity.class);
                     intent.putExtra("SearchResult", result);
                     mContext.startActivity(intent);
