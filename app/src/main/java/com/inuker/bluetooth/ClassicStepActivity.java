@@ -56,6 +56,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         Button btnChargeStop = (Button) findViewById(R.id.btnChargeStop);
         Button btnOffChargeStart = (Button) findViewById(R.id.btnOffChargeStart);
         Button btnUnoffChargeStart = (Button) findViewById(R.id.btnUnoffChargeStart);
+        Button btnPileNo = (Button) findViewById(R.id.btnPileNo);
         Button btnClose = (Button) findViewById(R.id.btnClose);
         Button btnRecon = (Button) findViewById(R.id.btnRecon);
         btnFirstAuth.setOnClickListener(this);
@@ -64,6 +65,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         btnChargeStop.setOnClickListener(this);
         btnOffChargeStart.setOnClickListener(this);
         btnUnoffChargeStart.setOnClickListener(this);
+        btnPileNo.setOnClickListener(this);
         btnClose.setOnClickListener(this);
         btnRecon.setOnClickListener(this);
         mBluetoothDataParserImpl = new BluetoothDataParserImpl(null);
@@ -262,6 +264,7 @@ public class ClassicStepActivity extends FragmentActivity implements View.OnClic
         // 创建对话框
         final AlertDialog alertDialog = builder
                 .setCancelable(false)
+                .setView(view2)
                 .create();
         alertDialog.show();
 

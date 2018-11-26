@@ -51,6 +51,7 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
         Button btnChargeStop = (Button) findViewById(R.id.btnChargeStop);
         Button btnOffChargeStart = (Button) findViewById(R.id.btnOffChargeStart);
         Button btnUnoffChargeStart = (Button) findViewById(R.id.btnUnoffChargeStart);
+        Button btnPileNo = (Button) findViewById(R.id.btnPileNo);
         Button btnClose = (Button) findViewById(R.id.btnClose);
         Button btnRecon = (Button) findViewById(R.id.btnRecon);
         btnFirstAuth.setOnClickListener(this);
@@ -59,6 +60,7 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
         btnChargeStop.setOnClickListener(this);
         btnOffChargeStart.setOnClickListener(this);
         btnUnoffChargeStart.setOnClickListener(this);
+        btnPileNo.setOnClickListener(this);
         btnClose.setOnClickListener(this);
         btnRecon.setOnClickListener(this);
         mBluetoothDataParserImpl = new BluetoothDataParserImpl(null);
@@ -125,8 +127,8 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
         // 创建对话框
         final AlertDialog alertDialog = builder
                 .setCancelable(false)
+                .setView(view2)
                 .create();
-        alertDialog.show();
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +156,8 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
                 alertDialog.dismiss();
             }
         });
+
+        alertDialog.show();
 
     }
 
