@@ -32,7 +32,11 @@ public interface IBluetoothClient {
 
     void registerConnectStatusListener(String mac, BleConnectStatusListener listener);
 
+    void registerClassicConnectStatusListener(String mac, BleConnectStatusListener listener);
+
     void unregisterConnectStatusListener(String mac, BleConnectStatusListener listener);
+
+    void unregisterClassicConnectStatusListener(String mac, BleConnectStatusListener listener);
 
     void read(String mac, UUID service, UUID character, BleReadResponse response);
 

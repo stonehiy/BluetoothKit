@@ -243,12 +243,26 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
     }
 
     @Override
+    public void registerClassicConnectStatusListener(String mac, BleConnectStatusListener listener) {
+        if (null == mClassicBluetoothClient) {
+            mClassicBluetoothClient = new ClassicBluetoothClient();
+        }
+        mClassicBluetoothClient.setBleConnectStatusListener(listener);
+
+    }
+
+    @Override
     public void unregisterConnectStatusListener(String mac, BleConnectStatusListener listener) {
         checkRuntime(true);
         List<BleConnectStatusListener> listeners = mConnectStatusListeners.get(mac);
         if (listener != null && !ListUtils.isEmpty(listeners)) {
             listeners.remove(listener);
         }
+    }
+
+    @Override
+    public void unregisterClassicConnectStatusListener(String mac, BleConnectStatusListener listener) {
+
     }
 
     @Override

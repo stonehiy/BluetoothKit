@@ -98,6 +98,7 @@ public class ClientManager implements SearchResponse, ClassicResponse {
         ClientManager.getClient().stopSearch();
         if (null != mDevice) {
             ClientManager.getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+            ClientManager.getClient().registerClassicConnectStatusListener(mDevice.getAddress(),mConnectStatusListener);
         }
         connectDeviceIfNeeded();
 
@@ -162,7 +163,7 @@ public class ClientManager implements SearchResponse, ClassicResponse {
             BluetoothLog.v(String.format("DeviceDetailActivity onConnectStatusChanged %d in %s",
                     status, Thread.currentThread().getName()));
             mConnected = (status == STATUS_CONNECTED);
-            connectDeviceIfNeeded();
+//            connectDeviceIfNeeded();
         }
     };
 

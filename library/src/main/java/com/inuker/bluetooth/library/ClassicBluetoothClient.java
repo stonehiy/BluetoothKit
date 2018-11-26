@@ -141,6 +141,11 @@ public class ClassicBluetoothClient {
 
     }
 
+    public void setBleConnectStatusListener(BleConnectStatusListener bleConnectStatusListener) {
+        this.mBleConnectStatusListener = bleConnectStatusListener;
+
+    }
+
 
     /**
      * Set the current state of the chat connection
