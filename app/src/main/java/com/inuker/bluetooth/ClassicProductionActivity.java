@@ -17,21 +17,19 @@ import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
 import com.inuker.bluetooth.library.beacon.CommandResult;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.utils.ByteUtils;
+import com.inuker.bluetooth.newcode.BTClientManager;
+import com.inuker.bluetooth.newcode.CommandResultCallback;
 
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
-public class ClassicProductionActivity extends FragmentActivity implements View.OnClickListener {
+public class ClassicProductionActivity extends FragmentActivity implements View.OnClickListener, CommandResultCallback {
     private final static String TAG = ClassicProductionActivity.class.getName();
 
     private ListView mConversationView;
 
     private ArrayAdapter<String> mConversationArrayAdapter;
-    BluetoothDataParserImpl mBluetoothDataParserImpl;
-    private boolean mConnected;
     private SearchResult device;
-    private AlertDialog mConAlertDialog;
     private CommandResult mCommandResult;
-    private ClientManager mClientManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +61,6 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
         btnPileNo.setOnClickListener(this);
         btnClose.setOnClickListener(this);
         btnRecon.setOnClickListener(this);
-        mBluetoothDataParserImpl = new BluetoothDataParserImpl(null);
 
 
         // Initialize the array adapter for the conversation thread
@@ -71,8 +68,8 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
 
         mConversationView.setAdapter(mConversationArrayAdapter);
 
-        mClientManager = ClientManager.getInstance(this);
-        mClientManager.onScanner(device.getName());
+        BTClientManager.getInstance(this).onScanner(device.getName());
+        BTClientManager.getInstance(this).setCommandResultCallback(this);
 
     }
 
@@ -84,22 +81,22 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
         } else if (i == R.id.btnSecondAuth) {
         } else if (i == R.id.btnChargeStart) {
             byte[] parms = new byte[]{(byte) 0xA1};
-            mClientManager.sendByteData((byte) 0x10, parms, 0);
+            BTClientManager.getInstance(this).sendByteData((byte) 0x10, parms, 0);
         } else if (i == R.id.btnChargeStop) {
             byte[] parms = new byte[]{(byte) 0xA2};
-            mClientManager.sendByteData((byte) 0x10, parms, 0);
+            BTClientManager.getInstance(this).sendByteData((byte) 0x10, parms, 0);
         } else if (i == R.id.btnOffChargeStart) {
             byte[] parms = new byte[]{(byte) 0xA3};
-            mClientManager.sendByteData((byte) 0x10, parms, 0);
+            BTClientManager.getInstance(this).sendByteData((byte) 0x10, parms, 0);
         } else if (i == R.id.btnUnoffChargeStart) {
             byte[] parms = new byte[]{(byte) 0xA4};
-            mClientManager.sendByteData((byte) 0x10, parms, 0);
+            BTClientManager.getInstance(this).sendByteData((byte) 0x10, parms, 0);
         } else if (i == R.id.btnPileNo) {
             showSetPileNo();
         } else if (i == R.id.btnClose) {
-            ClientManager.getClient().disconnectClassic();
+            BTClientManager.getInstance(this).onDisconnect();
         } else if (i == R.id.btnRecon) {
-            mClientManager.onScanner(device.getName());
+            BTClientManager.getInstance(this).onScanner(device.getName());
         }
 
     }
@@ -108,7 +105,7 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mClientManager.onDestroy();
+        BTClientManager.getInstance(this).onDisconnect();
     }
 
 
@@ -145,7 +142,7 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
                 byte[] b1 = new byte[]{(byte) 0xA5};
                 byte[] b2 = ByteUtils.stringToBytes(pileNo);
                 byte[] bytes = byteMerger(b1, b2);
-                mClientManager.sendByteData((byte) 0x10, bytes, 0);
+                BTClientManager.getInstance(ClassicProductionActivity.this).sendByteData((byte) 0x10, bytes, 0);
                 alertDialog.dismiss();
 
             }
@@ -178,4 +175,11 @@ public class ClassicProductionActivity extends FragmentActivity implements View.
     }
 
 
+    @Override
+    public void onCommandResult(CommandResult commandResult) {
+        mConversationArrayAdapter.add("received:" + commandResult.getDesc());
+        mConversationArrayAdapter.notifyDataSetChanged();
+
+
+    }
 }

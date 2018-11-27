@@ -120,6 +120,11 @@ public class ClassicBluetoothClient {
 
         }
     };
+    private BluetoothDevice mRemoteDevice;
+
+    public BluetoothDevice getRemoteDevice() {
+        return mRemoteDevice;
+    }
 
     public ClassicBluetoothClient() {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -193,8 +198,8 @@ public class ClassicBluetoothClient {
      * Start the ConnectThread to initiate a connection to a remote device.
      */
     public synchronized void connect(String address) {
-        BluetoothDevice remoteDevice = mAdapter.getRemoteDevice(address);
-        BluetoothLog.i(TAG + "connect to: " + remoteDevice.getName());
+        mRemoteDevice = mAdapter.getRemoteDevice(address);
+        BluetoothLog.i(TAG + "connect to: " + mRemoteDevice.getName());
 
         // Cancel any thread attempting to make a connection
         if (mState == STATE_CONNECTING) {
@@ -211,7 +216,7 @@ public class ClassicBluetoothClient {
         }
 
         // Start the thread to connect with the given device
-        mConnectThread = new ConnectThread(remoteDevice);
+        mConnectThread = new ConnectThread(mRemoteDevice);
         mConnectThread.start();
         setState(STATE_CONNECTING);
     }

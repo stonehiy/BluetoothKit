@@ -1,5 +1,7 @@
 package com.inuker.bluetooth.library;
 
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothProfile;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -738,5 +740,20 @@ public class BluetoothClientImpl implements IBluetoothClient, ProxyInterceptor, 
         if (Looper.myLooper() != targetLooper) {
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public int getClassicConnectStatus(String mac) {
+        if (null != mClassicBluetoothClient) {
+            BluetoothDevice remoteDevice = mClassicBluetoothClient.getRemoteDevice();
+            if (null != remoteDevice) {
+                if (remoteDevice.getAddress().equals(mac)) {
+                    if (ClassicBluetoothClient.STATE_CONNECTED == mClassicBluetoothClient.getState()) {
+                        return BluetoothProfile.STATE_CONNECTED;
+                    }
+                }
+            }
+        }
+        return Constants.STATUS_UNKNOWN;
     }
 }

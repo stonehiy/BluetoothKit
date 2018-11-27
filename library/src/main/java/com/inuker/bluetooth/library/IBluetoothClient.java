@@ -79,4 +79,7 @@ public interface IBluetoothClient {
     void clearRequest(String mac, int type);
 
     void refreshCache(String mac);
+
+
+    int getClassicConnectStatus(String mac);
 }

@@ -1,6 +1,10 @@
 package com.inuker.bluetooth.library;
 
+import android.annotation.TargetApi;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.os.Build;
 
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
@@ -188,7 +192,7 @@ public class BluetoothClient implements IBluetoothClient {
 
     @Override
     public void registerClassicConnectStatusListener(String mac, BleConnectStatusListener listener) {
-        mClient.registerClassicConnectStatusListener(mac,listener);
+        mClient.registerClassicConnectStatusListener(mac, listener);
     }
 
     @Override
@@ -198,7 +202,7 @@ public class BluetoothClient implements IBluetoothClient {
 
     @Override
     public void unregisterClassicConnectStatusListener(String mac, BleConnectStatusListener listener) {
-        mClient.unregisterClassicConnectStatusListener(mac,listener);
+        mClient.unregisterClassicConnectStatusListener(mac, listener);
     }
 
     @Override
@@ -221,8 +225,14 @@ public class BluetoothClient implements IBluetoothClient {
         mClient.unregisterBluetoothBondListener(listener);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public int getConnectStatus(String mac) {
-        return BluetoothUtils.getConnectStatus(mac);
+        BluetoothDevice remoteDevice = BluetoothUtils.getRemoteDevice(mac);
+        if (remoteDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+            return getClassicConnectStatus(mac);
+        } else {
+            return BluetoothUtils.getConnectStatus(mac);
+        }
     }
 
     public boolean isBluetoothOpened() {
@@ -253,5 +263,10 @@ public class BluetoothClient implements IBluetoothClient {
     @Override
     public void refreshCache(String mac) {
         mClient.refreshCache(mac);
+    }
+
+    @Override
+    public int getClassicConnectStatus(String mac) {
+        return mClient.getClassicConnectStatus(mac);
     }
 }

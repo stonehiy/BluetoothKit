@@ -215,6 +215,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
 //        byte[] encryptedData = Arrays.copyOfRange(data, 0, data.length - timeLen);
 
         CommandResult commandResult = parseData(data);
+        BluetoothLog.i("BluetoothDataParserImpl commandResult desc = " + commandResult.getDesc());
         //以下解析数据
         /*
         if (commandResult != null && commandResult.getType() != CommandResult.CommandType.ILLEGAL_DATA) {
