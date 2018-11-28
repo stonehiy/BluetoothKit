@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -26,7 +27,7 @@ import com.inuker.bluetooth.library.utils.ByteUtils;
 
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
-public class ClassicStepActivity extends FragmentActivity implements View.OnClickListener {
+public class ClassicStepActivity extends AppCompatActivity implements View.OnClickListener {
     private final static String TAG = ClassicStepActivity.class.getName();
 
     private ListView mConversationView;

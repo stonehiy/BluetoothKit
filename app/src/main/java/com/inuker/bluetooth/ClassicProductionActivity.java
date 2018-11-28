@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,7 +23,7 @@ import com.inuker.bluetooth.newcode.CommandResultCallback;
 
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
-public class ClassicProductionActivity extends FragmentActivity implements View.OnClickListener, CommandResultCallback {
+public class ClassicProductionActivity extends AppCompatActivity implements View.OnClickListener, CommandResultCallback {
     private final static String TAG = ClassicProductionActivity.class.getName();
 
     private ListView mConversationView;

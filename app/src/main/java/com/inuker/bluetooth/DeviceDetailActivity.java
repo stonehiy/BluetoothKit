@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,7 +30,7 @@ import java.util.UUID;
 /**
  * Created by dingjikerbo on 2016/9/2.
  */
-public class DeviceDetailActivity extends Activity {
+public class DeviceDetailActivity extends AppCompatActivity {
     private final static String TAG = DeviceDetailActivity.class.getName();
 
     private TextView mTvTitle;

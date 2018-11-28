@@ -2,6 +2,7 @@ package com.inuker.bluetooth;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,7 +17,7 @@ import com.inuker.bluetooth.view.PullToRefreshFrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String MAC = "B0:D5:9D:6F:E7:A5";
 

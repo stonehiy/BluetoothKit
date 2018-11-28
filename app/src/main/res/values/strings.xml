@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">充电蓝牙测试</string>
+    <string name="app_name">充电盒测试端</string>
     <string name="action_settings">Settings</string>
     <!-- 下拉刷新listView -->
     <string name="pull_to_refresh_pull_label">向下拖动刷新</string>

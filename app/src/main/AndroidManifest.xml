@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inuker.bluetooth">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -16,41 +17,42 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".HomeActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!--<activity-->
-        <!--android:name=".WaveActivity" />-->
-
+        <activity
+            android:name=".MainActivity"
+            android:label="蓝牙测试"
+            android:screenOrientation="portrait" /> <!-- <activity -->
+        <!-- android:name=".WaveActivity" /> -->
         <activity
             android:name=".DeviceDetailActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".CharacterActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".TestActivity1"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ClassicProductionActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ClassicStepActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-
+        <activity
+            android:name=".ApiActivity"
+            android:label="API测试"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
