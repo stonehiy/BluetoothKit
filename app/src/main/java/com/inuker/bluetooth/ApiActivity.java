@@ -47,9 +47,10 @@ public class ApiActivity extends AppCompatActivity {
 
     public void clickStop(View view) {
         if (null == mEpileOpenAsk) {
+            Toast.makeText(getApplicationContext(), "数据异常，请先开启充电", Toast.LENGTH_LONG).show();
             return;
         }
-        stopCharge(mEpileOpenAsk.e_charge_request_id, mEpileOpenAsk.membercode);
+        stopCharge(mEpileOpenAsk.e_epile_id, mEpileOpenAsk.membercode);
 
     }
 
@@ -138,9 +139,9 @@ public class ApiActivity extends AppCompatActivity {
                 String s = response.body().string();
                 BaseEntity baseEntity = GsonUtil.gsonToBean(s, BaseEntity.class);
                 if (baseEntity.ok()) {
-                    showThreadToast("开启充电成功");
                     Log.i(TAG, "baseEntity.data.toString() = " + baseEntity.data);
                     mEpileOpenAsk = GsonUtil.gsonToBean(new Gson().toJson(baseEntity.data), EpileOpenAsk.class);
+                    showThreadToast("开启充电成功");
                 } else {
                     showThreadToast(baseEntity.message);
                 }
@@ -154,14 +155,14 @@ public class ApiActivity extends AppCompatActivity {
     /**
      * 关闭充电
      *
-     * @param rid
+     * @param eid
      * @param membercode
      */
-    private void stopCharge(String rid, String membercode) {
+    private void stopCharge(String eid, String membercode) {
         showNetDialog();
         //string rid, string membercode
         Map<String, Object> map = new HashMap<>();
-        map.put("rid", rid);
+        map.put("rid", eid);
         map.put("membercode", membercode);
 
         OkHttp3Util.doGet(ApiUrl.API_CHARGE_STOP, map, new Callback() {
