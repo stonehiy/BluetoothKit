@@ -224,21 +224,25 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     }
 
     private void showScannerDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("发现蓝牙")
-                .setCancelable(true)
-                .setMessage("正在扫描蓝牙中，请稍等...");
-        mScannerDialog = builder.create();
+        if (null == mScannerDialog) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("发现蓝牙")
+                    .setCancelable(true)
+                    .setMessage("正在扫描蓝牙中，请稍等...");
+            mScannerDialog = builder.create();
+        }
         mScannerDialog.show();
     }
 
 
     private void showConnectDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("连接蓝牙")
-                .setCancelable(true)
-                .setMessage("蓝牙连接中，请稍等...");
-        mConAlertDialog = builder.create();
+        if (null == mConAlertDialog) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("连接蓝牙")
+                    .setCancelable(true)
+                    .setMessage("蓝牙连接中，请稍等...");
+            mConAlertDialog = builder.create();
+        }
         mConAlertDialog.show();
     }
 

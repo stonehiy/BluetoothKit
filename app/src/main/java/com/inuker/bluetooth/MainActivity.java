@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     private void searchDevice() {
         if (!ClientManager.getClient().isBluetoothOpened()) {
             ClientManager.getClient().openBluetooth();
-            return;
         }
         SearchRequest request = new SearchRequest.Builder()
 //                .searchBluetoothLeDevice(5000, 2)// // 先扫BLE设备3次，每次3s

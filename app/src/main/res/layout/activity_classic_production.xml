@@ -52,58 +52,67 @@
 
                 <Button
                     android:id="@+id/btnRecon"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="连接蓝牙" />
 
                 <Button
                     android:id="@+id/btnFirstAuth"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="首次鉴权"
                     android:visibility="gone" />
 
                 <Button
                     android:id="@+id/btnSecondAuth"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="二次鉴权"
                     android:visibility="gone" />
 
                 <Button
                     android:id="@+id/btnChargeStart"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="启动充电" />
 
                 <Button
                     android:id="@+id/btnChargeStop"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="停止充电" />
 
                 <Button
                     android:id="@+id/btnOffChargeStart"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="启用离线自动充电" />
 
                 <Button
                     android:id="@+id/btnUnoffChargeStart"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="禁止离线自动充电" />
 
                 <Button
                     android:id="@+id/btnPileNo"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="下发充电桩号" />
 
                 <Button
                     android:id="@+id/btnClose"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="断开连接" />
 
 
