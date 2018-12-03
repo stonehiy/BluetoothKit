@@ -233,7 +233,13 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
             @Override
             public void onResponse(int code, Object data) {
                 if (code == ConstantsClassic.CLASSIC_CON_SECCESS) {
-                    sendByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
+                    new Handler().postDelayed(new Runnable() {
+                        //                            @Override
+                        public void run() {
+                            sendByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
+                        }
+                    }, 500);
+
                 } else {
                     if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
                         mConAlertDialog.dismiss();
