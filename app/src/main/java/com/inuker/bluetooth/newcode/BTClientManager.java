@@ -3,6 +3,7 @@ package com.inuker.bluetooth.newcode;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
@@ -145,7 +146,10 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     public void onDisconnect() {
         getClient().stopSearch();
         getClient().disconnectClassic();
-
+//        mBtName = null;
+//        mContext = null;
+//        mDevice = null;
+//        mClientManager = null;
 //        mBtName = null;
 //        mClientManager = null;
 //        mClient = null;
@@ -329,14 +333,21 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
         if (code == ConstantsClassic.MESSAGE_READ) {
             byte[] bytes = (byte[]) data;
             String hexStr = ByteUtils.byteToString(bytes);
-            CommandResult commandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
+            final CommandResult commandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
             if (null != commandResult) {
                 if (commandResult.isResult()) {
                     if (commandResult.getType().code == CommandResult.CommandType.AUTH.code) {
                         if (null != mCommandResultCallback) {
                             mCommandResultCallback.onCommandResult(commandResult);
                         }
-                        sendByteData((byte) 0x32, commandResult.getSecondCode(), 0);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                sendByteData((byte) 0x32, commandResult.getSecondCode(), 0);
+                            }
+                        }, 500);
+
+
                     } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
                         if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
                             mConAlertDialog.dismiss();
@@ -380,10 +391,27 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     }
 
     public void onDestroy() {
+        onDisconnect();
         if (null != mDevice) {
             getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
         }
         getClient().unregisterBluetoothBondListener(mBluetoothBondListener);
+
+        mBtName = null;
+        mContext = null;
+        mDevice = null;
+        mClientManager = null;
+        mBtName = null;
+        mClientManager = null;
+        mClient = null;
+        mContext = null;
+        mScannerDialog = null;
+        mConAlertDialog = null;
+        mBluetoothDataParserImpl = null;
+        mDevice = null;
+        mCommandResultCallback = null;
+        mSendCommandCallback = null;
+        mConnectStatusCallback = null;
     }
 
 

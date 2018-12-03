@@ -120,7 +120,7 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BTClientManager.getInstance(this).onDisconnect();
+        BTClientManager.getInstance(this).onDestroy();
     }
 
 
