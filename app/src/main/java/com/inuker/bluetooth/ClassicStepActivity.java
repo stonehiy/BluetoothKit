@@ -60,6 +60,7 @@ public class ClassicStepActivity extends AppCompatActivity implements View.OnCli
         Button btnPileNo = (Button) findViewById(R.id.btnPileNo);
         Button btnClose = (Button) findViewById(R.id.btnClose);
         Button btnRecon = (Button) findViewById(R.id.btnRecon);
+        Button btnClear = (Button) findViewById(R.id.btnClear);
         btnFirstAuth.setOnClickListener(this);
         btnSecondAuth.setOnClickListener(this);
         btnChargeStart.setOnClickListener(this);
@@ -69,6 +70,7 @@ public class ClassicStepActivity extends AppCompatActivity implements View.OnCli
         btnPileNo.setOnClickListener(this);
         btnClose.setOnClickListener(this);
         btnRecon.setOnClickListener(this);
+        btnClear.setOnClickListener(this);
         mBluetoothDataParserImpl = new BluetoothDataParserImpl(null);
 
 
@@ -163,7 +165,11 @@ public class ClassicStepActivity extends AppCompatActivity implements View.OnCli
             ClientManager.getClient().disconnectClassic();
         } else if (i == R.id.btnRecon) {
             connectDeviceIfNeeded();
+        } else if (i == R.id.btnClear) {
+            mConversationArrayAdapter.clear();
+            mConversationArrayAdapter.notifyDataSetChanged();
         }
+
 
     }
 

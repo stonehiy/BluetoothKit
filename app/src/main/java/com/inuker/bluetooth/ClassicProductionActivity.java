@@ -20,10 +20,13 @@ import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.utils.ByteUtils;
 import com.inuker.bluetooth.newcode.BTClientManager;
 import com.inuker.bluetooth.newcode.CommandResultCallback;
+import com.inuker.bluetooth.newcode.SendCommandCallback;
 
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
-public class ClassicProductionActivity extends AppCompatActivity implements View.OnClickListener, CommandResultCallback {
+public class ClassicProductionActivity extends AppCompatActivity implements View.OnClickListener,
+        CommandResultCallback,
+        SendCommandCallback {
     private final static String TAG = ClassicProductionActivity.class.getName();
 
     private ListView mConversationView;
@@ -53,6 +56,7 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
         Button btnPileNo = (Button) findViewById(R.id.btnPileNo);
         Button btnClose = (Button) findViewById(R.id.btnClose);
         Button btnRecon = (Button) findViewById(R.id.btnRecon);
+        Button btnClear = (Button) findViewById(R.id.btnClear);
         btnFirstAuth.setOnClickListener(this);
         btnSecondAuth.setOnClickListener(this);
         btnChargeStart.setOnClickListener(this);
@@ -62,6 +66,7 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
         btnPileNo.setOnClickListener(this);
         btnClose.setOnClickListener(this);
         btnRecon.setOnClickListener(this);
+        btnClear.setOnClickListener(this);
 
 
         // Initialize the array adapter for the conversation thread
@@ -71,6 +76,7 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
 
         BTClientManager.getInstance(this).onScanner(device.getName());
         BTClientManager.getInstance(this).setCommandResultCallback(this);
+        BTClientManager.getInstance(this).setSendCommandCallback(this);
 
     }
 
@@ -98,6 +104,9 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
             BTClientManager.getInstance(this).onDisconnect();
         } else if (i == R.id.btnRecon) {
             BTClientManager.getInstance(this).onScanner(device.getName());
+        } else if (i == R.id.btnClear) {
+            mConversationArrayAdapter.clear();
+            mConversationArrayAdapter.notifyDataSetChanged();
         }
 
     }
@@ -181,6 +190,18 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
         mConversationArrayAdapter.add("received:" + commandResult.getDesc());
         mConversationArrayAdapter.notifyDataSetChanged();
 
+
+    }
+
+    @Override
+    public void onSendData(boolean isSuccess, byte[] data) {
+        String sendData = ByteUtils.byteToString(data);
+        if (isSuccess) {
+            mConversationArrayAdapter.add("send success:" + sendData);
+        } else {
+            mConversationArrayAdapter.add("send fail:" + sendData + "->需要重新连接蓝牙重试");
+        }
+        mConversationArrayAdapter.notifyDataSetChanged();
 
     }
 }

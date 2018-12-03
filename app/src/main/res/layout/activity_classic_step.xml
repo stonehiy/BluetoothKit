@@ -111,6 +111,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="重新连接" />
+                <Button
+                    android:id="@+id/btnClear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="清空日志" />
             </LinearLayout>
 
 

@@ -50,8 +50,15 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     private CommandResultCallback mCommandResultCallback;
 
+    private SendCommandCallback mSendCommandCallback;
+
     public void setCommandResultCallback(CommandResultCallback commandResultCallback) {
         this.mCommandResultCallback = commandResultCallback;
+
+    }
+
+    public void setSendCommandCallback(SendCommandCallback sendCommandCallback) {
+        this.mSendCommandCallback = sendCommandCallback;
 
     }
 
@@ -238,7 +245,9 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                     .setMessage("正在扫描蓝牙中，请稍等...");
             mScannerDialog = builder.create();
         }
-        mScannerDialog.show();
+        if (!mScannerDialog.isShowing()) {
+            mScannerDialog.show();
+        }
     }
 
 
@@ -250,7 +259,9 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                     .setMessage("蓝牙连接中，请稍等...");
             mConAlertDialog = builder.create();
         }
-        mConAlertDialog.show();
+        if (!mConAlertDialog.isShowing()) {
+            mConAlertDialog.show();
+        }
     }
 
     private void showErrorDialog(String title, String msg, final int tag) {
@@ -296,8 +307,14 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                 if (code == ConstantsClassic.MESSAGE_WRITE) {
                     String s = ByteUtils.byteToString((byte[]) data);
                     Log.i(TAG, "writeClassic data = " + s);
+                    if (null != mSendCommandCallback) {
+                        mSendCommandCallback.onSendData(true, (byte[]) data);
+                    }
                 } else {
                     Log.i(TAG, "writeClassic data failed ,bt not connected ");
+                    if (null != mSendCommandCallback) {
+                        mSendCommandCallback.onSendData(false, (byte[]) data);
+                    }
                 }
             }
         });
