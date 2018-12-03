@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.inuker.bluetooth.MyApplication;
 import com.inuker.bluetooth.library.BluetoothClient;
+import com.inuker.bluetooth.library.Constants;
 import com.inuker.bluetooth.library.ConstantsClassic;
 import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
 import com.inuker.bluetooth.library.beacon.CommandResult;
@@ -186,6 +187,12 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
             BluetoothLog.v(String.format("DeviceDetailActivity onConnectStatusChanged %d in %s",
                     status, Thread.currentThread().getName()));
             mConnected = (status == STATUS_CONNECTED);
+//            if (status == Constants.STATUS_DISCONNECTED) {
+//                if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
+//                    mConAlertDialog.dismiss();
+//                }
+//
+//            }
 //            connectDeviceIfNeeded();
         }
     };
