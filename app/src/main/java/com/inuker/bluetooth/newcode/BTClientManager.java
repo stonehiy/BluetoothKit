@@ -381,6 +381,10 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                             }
                         }
 
+                    } else {
+                        if (null != mCommandResultCallback) {
+                            mCommandResultCallback.onCommandResult(commandResult);
+                        }
                     }
                 }
 

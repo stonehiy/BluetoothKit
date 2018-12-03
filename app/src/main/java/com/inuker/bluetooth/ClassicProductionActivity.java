@@ -192,7 +192,9 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
 
     @Override
     public void onCommandResult(CommandResult commandResult) {
-        mConversationArrayAdapter.add("received:" + commandResult.getDesc());
+        String resultData = ByteUtils.byteToString(commandResult.getResultBytes());
+        mConversationArrayAdapter.add("received command:" + resultData);
+        mConversationArrayAdapter.add("received desc:" + commandResult.getDesc());
         mConversationArrayAdapter.notifyDataSetChanged();
 
 

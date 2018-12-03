@@ -50,6 +50,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
      */
     private CommandResult parseData(byte[] buffer) {
         CommandResult result = new CommandResult();
+        result.setResultBytes(buffer);
 
         //先通过AES解f密, 从下标1，开始解密, 长度为整包减去头尾2字节
 //        byte[] buffer = decrypt(data, key, DEFAULT_IV, 0, data.length);
