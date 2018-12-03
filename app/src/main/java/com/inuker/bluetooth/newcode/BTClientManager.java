@@ -52,6 +52,8 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     private SendCommandCallback mSendCommandCallback;
 
+    private ConnectStatusCallback mConnectStatusCallback;
+
     public void setCommandResultCallback(CommandResultCallback commandResultCallback) {
         this.mCommandResultCallback = commandResultCallback;
 
@@ -59,6 +61,11 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     public void setSendCommandCallback(SendCommandCallback sendCommandCallback) {
         this.mSendCommandCallback = sendCommandCallback;
+
+    }
+
+    public void setConnectStatusCallback(ConnectStatusCallback connectStatusCallback) {
+        this.mConnectStatusCallback = connectStatusCallback;
 
     }
 
@@ -201,6 +208,11 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 //
 //            }
 //            connectDeviceIfNeeded();
+            if (null != mConnectStatusCallback) {
+                mConnectStatusCallback.onConnectStatus(mac, status);
+            }
+
+
         }
     };
 

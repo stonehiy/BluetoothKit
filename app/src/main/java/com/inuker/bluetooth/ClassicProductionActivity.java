@@ -2,6 +2,7 @@ package com.inuker.bluetooth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
@@ -14,19 +15,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.inuker.bluetooth.library.Constants;
 import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
 import com.inuker.bluetooth.library.beacon.CommandResult;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.utils.ByteUtils;
 import com.inuker.bluetooth.newcode.BTClientManager;
 import com.inuker.bluetooth.newcode.CommandResultCallback;
+import com.inuker.bluetooth.newcode.ConnectStatusCallback;
 import com.inuker.bluetooth.newcode.SendCommandCallback;
 
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
 public class ClassicProductionActivity extends AppCompatActivity implements View.OnClickListener,
         CommandResultCallback,
-        SendCommandCallback {
+        SendCommandCallback,
+        ConnectStatusCallback {
     private final static String TAG = ClassicProductionActivity.class.getName();
 
     private ListView mConversationView;
@@ -77,6 +81,7 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
         BTClientManager.getInstance(this).onScanner(device.getName());
         BTClientManager.getInstance(this).setCommandResultCallback(this);
         BTClientManager.getInstance(this).setSendCommandCallback(this);
+        BTClientManager.getInstance(this).setConnectStatusCallback(this);
 
     }
 
@@ -202,6 +207,16 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
             mConversationArrayAdapter.add("send fail:" + sendData + "->需要重新连接蓝牙重试");
         }
         mConversationArrayAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onConnectStatus(String mac, int status) {
+        if (status == Constants.STATUS_CONNECTED) {
+            mConversationArrayAdapter.add("connect success:->正在首次鉴权...");
+        } else {
+            mConversationArrayAdapter.add("disconnect :->蓝牙连接断开");
+        }
 
     }
 }
