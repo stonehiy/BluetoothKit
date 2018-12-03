@@ -110,8 +110,10 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
             return;
         }
-        showScannerDialog();
-        searchDevice();
+        if (null != mContext) {
+            showScannerDialog();
+            searchDevice();
+        }
 
 
     }
