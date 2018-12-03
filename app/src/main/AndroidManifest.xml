@@ -43,12 +43,13 @@
             android:name=".TestActivity1"
             android:screenOrientation="portrait" />
         <activity
+            android:label="生产测试"
             android:name=".ClassicProductionActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ClassicStepActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:label="开发测试"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ApiActivity"
             android:label="API测试"
