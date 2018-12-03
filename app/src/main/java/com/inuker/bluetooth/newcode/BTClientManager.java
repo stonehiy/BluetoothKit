@@ -34,7 +34,6 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     private String mBtName;
 
-    private boolean mConnected;
 
     private static BluetoothClient mClient;
 
@@ -133,7 +132,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
             getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
             getClient().registerClassicConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
         }
-        connectDeviceIfNeeded();
+        connectDevice();
 
     }
 
@@ -144,19 +143,18 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     public void onDisconnect() {
         getClient().stopSearch();
         getClient().disconnectClassic();
-        if (null != mDevice) {
-            getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
-        }
-        getClient().unregisterBluetoothBondListener(mBluetoothBondListener);
-        mBtName = null;
-        mClientManager = null;
-        mClient = null;
-        mContext = null;
-        mScannerDialog = null;
-        mConAlertDialog = null;
-        mBluetoothDataParserImpl = null;
-        mDevice = null;
-        mCommandResultCallback = null;
+
+//        mBtName = null;
+//        mClientManager = null;
+//        mClient = null;
+//        mContext = null;
+//        mScannerDialog = null;
+//        mConAlertDialog = null;
+//        mBluetoothDataParserImpl = null;
+//        mDevice = null;
+//        mCommandResultCallback = null;
+//        mSendCommandCallback = null;
+//        mConnectStatusCallback = null;
     }
 
 
@@ -200,14 +198,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
         public void onConnectStatusChanged(String mac, int status) {
             BluetoothLog.v(String.format("DeviceDetailActivity onConnectStatusChanged %d in %s",
                     status, Thread.currentThread().getName()));
-            mConnected = (status == STATUS_CONNECTED);
-//            if (status == Constants.STATUS_DISCONNECTED) {
-//                if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
-//                    mConAlertDialog.dismiss();
-//                }
-//
-//            }
-//            connectDeviceIfNeeded();
+            boolean connected = (status == STATUS_CONNECTED);
             if (null != mConnectStatusCallback) {
                 mConnectStatusCallback.onConnectStatus(mac, status);
             }
@@ -223,11 +214,6 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
         }
     };
 
-    private void connectDeviceIfNeeded() {
-        if (!mConnected) {
-            connectDevice();
-        }
-    }
 
     private void connectDevice() {
         getClient().readClassic(this);
@@ -260,7 +246,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                     .setMessage("正在扫描蓝牙中，请稍等...");
             mScannerDialog = builder.create();
         }
-        if (!mScannerDialog.isShowing()) {
+        if (null != mScannerDialog && !mScannerDialog.isShowing()) {
             mScannerDialog.show();
         }
     }
@@ -289,7 +275,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (tag) {
                             case 1:
-                                connectDeviceIfNeeded();
+                                connectDevice();
                                 break;
                             case 2:
                                 if (null != mBtName) {
@@ -390,4 +376,13 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
         }
     }
+
+    public void onDestroy() {
+        if (null != mDevice) {
+            getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+        }
+        getClient().unregisterBluetoothBondListener(mBluetoothBondListener);
+    }
+
+
 }
