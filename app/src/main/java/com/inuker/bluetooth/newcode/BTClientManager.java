@@ -343,22 +343,21 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
             if (null != commandResult) {
                 if (commandResult.isResult()) {
                     if (commandResult.getType().code == CommandResult.CommandType.AUTH.code) {
+                        if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
+                            mConAlertDialog.dismiss();
+                        }
                         if (null != mCommandResultCallback) {
                             mCommandResultCallback.onCommandResult(commandResult);
                         }
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                sendByteData((byte) 0x32, commandResult.getSecondCode(), 0);
-                            }
-                        }, 500);
-
-
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                sendByteData((byte) 0x32, commandResult.getSecondCode(), 0);
+//                            }
+//                        }, 500);
                     } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
-                        if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
-                            mConAlertDialog.dismiss();
-                        }
+
                         if (null != mCommandResultCallback) {
                             mCommandResultCallback.onCommandResult(commandResult);
                         }
