@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inuker.bluetooth.library.Constants;
-import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
 import com.inuker.bluetooth.library.beacon.CommandResult;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.utils.ByteUtils;
@@ -25,7 +24,6 @@ import com.inuker.bluetooth.newcode.CommandResultCallback;
 import com.inuker.bluetooth.newcode.ConnectStatusCallback;
 import com.inuker.bluetooth.newcode.SendCommandCallback;
 
-import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
 public class ClassicProductionActivity extends AppCompatActivity implements View.OnClickListener,
         CommandResultCallback,

@@ -111,10 +111,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
             return;
         }
-        if (null != mContext) {
-            showScannerDialog();
-            searchDevice();
-        }
+        searchDevice();
 
 
     }
@@ -166,6 +163,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     @Override
     public void onSearchStarted() {
+        showScannerDialog();
 
     }
 
@@ -180,7 +178,9 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
         }
         if (mBtName.equals(device.getName())) {
             mDevice = device;
-            mScannerDialog.dismiss();
+            if (null != mScannerDialog && mScannerDialog.isShowing()) {
+                mScannerDialog.dismiss();
+            }
             onCreateConnect();
         }
 
@@ -188,13 +188,17 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     @Override
     public void onSearchStopped() {
-        mScannerDialog.dismiss();
+        if (null != mScannerDialog && mScannerDialog.isShowing()) {
+            mScannerDialog.dismiss();
+        }
         showErrorDialog("蓝牙扫描失败", "蓝牙扫描失败，请检查设备是否通电", 2);
     }
 
     @Override
     public void onSearchCanceled() {
-        mScannerDialog.dismiss();
+        if (null != mScannerDialog && mScannerDialog.isShowing()) {
+            mScannerDialog.dismiss();
+        }
 
     }
 
@@ -224,7 +228,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     private void connectDevice() {
         getClient().readClassic(this);
         showConnectDialog();
-        getClient().disconnectClassic();
+//        getClient().disconnectClassic();
         if (null == mDevice) {
             return;
         }
@@ -272,7 +276,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                     .setMessage("蓝牙连接中，请稍等...");
             mConAlertDialog = builder.create();
         }
-        if (!mConAlertDialog.isShowing()) {
+        if (null!=mConAlertDialog&&!mConAlertDialog.isShowing()) {
             mConAlertDialog.show();
         }
     }
