@@ -86,6 +86,10 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
 
     @Override
     public void onClick(View v) {
+
+        if (NoFastClickUtils.isFastClick()) {
+            return;
+        }
         int i = v.getId();
         if (i == R.id.btnFirstAuth) {
         } else if (i == R.id.btnSecondAuth) {
