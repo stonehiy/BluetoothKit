@@ -219,7 +219,7 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
         if (status == Constants.STATUS_CONNECTED) {
             mConversationArrayAdapter.add("connect " + mac + " success");
         } else {
-            mConversationArrayAdapter.add("disconnect " + mac + "disconnect");
+            mConversationArrayAdapter.add(mac + " disconnect");
         }
 
     }
