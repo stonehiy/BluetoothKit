@@ -217,9 +217,9 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
     @Override
     public void onConnectStatus(String mac, int status) {
         if (status == Constants.STATUS_CONNECTED) {
-            mConversationArrayAdapter.add("connect " + mac + " success:->正在首次鉴权...");
+            mConversationArrayAdapter.add("connect " + mac + " success");
         } else {
-            mConversationArrayAdapter.add("disconnect " + mac + " :->蓝牙连接断开");
+            mConversationArrayAdapter.add("disconnect " + mac + "disconnect");
         }
 
     }
