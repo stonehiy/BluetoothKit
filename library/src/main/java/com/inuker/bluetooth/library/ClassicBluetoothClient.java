@@ -313,7 +313,7 @@ public class ClassicBluetoothClient {
         mHandler.sendMessage(msg);
 
         // Start the service over to restart listening mode
-        ClassicBluetoothClient.this.start();
+//        ClassicBluetoothClient.this.start();
     }
 
     /**
@@ -327,8 +327,10 @@ public class ClassicBluetoothClient {
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
+        setState(STATE_NONE);
+
         // Start the service over to restart listening mode
-        ClassicBluetoothClient.this.start();
+//        ClassicBluetoothClient.this.start();
     }
 
 
@@ -440,6 +442,7 @@ public class ClassicBluetoothClient {
             while (true) {
                 try {
                     // Read from the InputStream
+                    int bytes1 = mmInStream.read(new byte[]{});
                     bytes = mmInStream.read(buffer);
                     Log.i(TAG, "read bytes = " + bytes);
 
@@ -450,7 +453,7 @@ public class ClassicBluetoothClient {
                     e.printStackTrace();
                     connectionLost();
                     // Start the service over to restart listening mode
-                    ClassicBluetoothClient.this.start();
+//                    ClassicBluetoothClient.this.start();
                     break;
                 }
             }
