@@ -276,7 +276,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                     .setMessage("蓝牙连接中，请稍等...");
             mConAlertDialog = builder.create();
         }
-        if (null!=mConAlertDialog&&!mConAlertDialog.isShowing()) {
+        if (null != mConAlertDialog && !mConAlertDialog.isShowing()) {
             mConAlertDialog.show();
         }
     }
@@ -408,6 +408,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
         onDisconnect();
         if (null != mDevice) {
             getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+            getClient().unregisterClassicConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
         }
         getClient().unregisterBluetoothBondListener(mBluetoothBondListener);
 

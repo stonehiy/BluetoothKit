@@ -106,12 +106,15 @@ public class ClassicBluetoothClient {
                     break;
                 case ConstantsClassic.MESSAGE_STATE_CHANGE:
                     if (null != mBleConnectStatusListener) {
+                        if (null == mRemoteDevice) {
+                            return;
+                        }
 //                        public static final int STATUS_CONNECTED = 0x10;
 //                        public static final int STATUS_DISCONNECTED = 0x20;
                         if (3 == msg.arg1) {
-                            mBleConnectStatusListener.onConnectStatusChanged(mAdapter.getAddress(), 0x10);
+                            mBleConnectStatusListener.onConnectStatusChanged(mRemoteDevice.getAddress(), 0x10);
                         } else if (0 == msg.arg1) {
-                            mBleConnectStatusListener.onConnectStatusChanged(mAdapter.getAddress(), 0x20);
+                            mBleConnectStatusListener.onConnectStatusChanged(mRemoteDevice.getAddress(), 0x20);
                         }
 
                     }
