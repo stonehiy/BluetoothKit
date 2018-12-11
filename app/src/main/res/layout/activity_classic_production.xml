@@ -92,14 +92,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="启用离线自动充电" />
+                    android:text="取消激活" />
 
                 <Button
                     android:id="@+id/btnUnoffChargeStart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="禁止离线自动充电" />
+                    android:text="激活" />
 
                 <Button
                     android:id="@+id/btnPileNo"
