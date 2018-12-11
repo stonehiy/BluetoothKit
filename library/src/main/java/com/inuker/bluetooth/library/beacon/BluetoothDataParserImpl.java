@@ -142,6 +142,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
             case 0x10:
                 byte resultType = bb.get();
                 byte resultCode = bb.get();
+                byte errorCode = bb.get();
                 if (resultType == (byte) 0xA1) {
                     result.setType(CommandResult.CommandType.CHARGE_START_RES);
                     if (0x01 == resultCode) {
@@ -149,8 +150,24 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
                         result.setDesc("启动充电成功");
                         result.setTypeDesc("启动充电");
                     } else {
+                        /*
+                         0001（失败）系统正在充电
+                         0002（失败）系统故障
+                         0003（失败）请确认枪连接
+                         0004（失败）离线自动充电已开启
+                         */
                         result.setResult(false);
-                        result.setDesc("启动充电失败");
+                        if (0x01 == errorCode) {
+                            result.setDesc("启动充电失败,充电盒正在充电中");
+                        } else if (0x02 == errorCode) {
+                            result.setDesc("启动充电失败,充电盒故障");
+                        } else if (0x03 == errorCode) {
+                            result.setDesc("启动充电失败,请确认枪是否连接");
+                        } else if (0x04 == errorCode) {
+                            result.setDesc("启动充电失败,离线自动充电已开启");
+                        } else {
+                            result.setDesc("启动充电失败");
+                        }
                         result.setTypeDesc("启动充电");
                     }
                 } else if (resultType == (byte) 0xA2) {
@@ -160,8 +177,19 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
                         result.setDesc("停止充电成功");
                         result.setTypeDesc("停止充电");
                     } else {
+                        /*
+                          0001（失败） 离线自动充电已开启
+                          0002（失败） 系统处于空闲状态
+                         */
                         result.setResult(false);
-                        result.setDesc("停止充电失败");
+                        if (0x01 == errorCode) {
+                            result.setDesc("停止充电失败,离线自动充电已开启");
+                        } else if (0x02 == errorCode) {
+                            result.setDesc("停止充电失败,充电盒处于空闲状态");
+                        } else {
+                            result.setDesc("停止充电失败");
+                        }
+
                         result.setTypeDesc("停止充电");
                     }
                 } else if (resultType == (byte) 0xA3) {
@@ -172,7 +200,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
                         result.setDesc("启用离线自动充电成功");
                     } else {
                         result.setResult(false);
-                        result.setDesc("启用离线自动充电失败");
+                        result.setDesc("启用离线自动充电失败，充电盒正在充电中");
                     }
 
                 } else if (resultType == (byte) 0xA4) {
