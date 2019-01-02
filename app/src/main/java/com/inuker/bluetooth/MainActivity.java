@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
             ClientManager.getClient().openBluetooth();
         }
         SearchRequest request = new SearchRequest.Builder()
-//                .searchBluetoothLeDevice(5000, 2)// // 先扫BLE设备3次，每次3s
-                .searchBluetoothClassicDevice(5000, 2) // 再扫经典蓝牙5s
+                .searchBluetoothLeDevice(5000, 3)// // 先扫BLE设备3次，每次3s
+                .searchBluetoothClassicDevice(5000, 3) // 再扫经典蓝牙5s
                 .build();
 
         ClientManager.getClient().search(request, mSearchResponse);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onDeviceFounded(SearchResult device) {
-//            BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress());
+            BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress()+"----"+device.device.getName());
             if (!mDevices.contains(device)) {
                 mDevices.add(device);
                 mAdapter.setDataList(mDevices);
