@@ -6,8 +6,10 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
+import com.inuker.bluetooth.ClientManager;
 import com.inuker.bluetooth.MyApplication;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
@@ -16,7 +18,12 @@ import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
 import com.inuker.bluetooth.library.beacon.CommandResult;
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
+import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
+import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
+import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
+import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.connect.response.ClassicResponse;
+import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.receiver.listener.BluetoothBondListener;
 import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.SearchResult;
@@ -24,6 +31,9 @@ import com.inuker.bluetooth.library.search.response.SearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.ByteUtils;
 
+import java.util.UUID;
+
+import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 import static com.inuker.bluetooth.library.Constants.STATUS_CONNECTED;
 
 /**
@@ -53,6 +63,14 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     private SendCommandCallback mSendCommandCallback;
 
     private ConnectStatusCallback mConnectStatusCallback;
+
+    private final static UUID BLE_WRITE_SERVICE_UUID = UUID.fromString("0x0000ffe5-0000-1000-8000-00805f9b34fb");
+    private final static UUID BLE_WRITE_CHARACTER_UUID = UUID.fromString("0x0000ffe9-0000-1000-8000-00805f9b34fb");
+
+
+    private final static UUID BLE_NOTIFY_SERVICE_UUID = UUID.fromString("0x0000ffe5-0000-1000-8000-00805f9b34fb");
+    private final static UUID BLE_NOTIFY_CHARACTER_UUID = UUID.fromString("0x0000ffe9-0000-1000-8000-00805f9b34fb");
+
 
     public void setCommandResultCallback(CommandResultCallback commandResultCallback) {
         this.mCommandResultCallback = commandResultCallback;
@@ -129,8 +147,11 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     public void onCreateConnect() {
         getClient().stopSearch();
         if (null != mDevice) {
-            getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
-            getClient().registerClassicConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+            if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+                getClient().registerClassicConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+            } else {
+                getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+            }
         }
         connectDevice();
 
@@ -226,32 +247,71 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
 
     private void connectDevice() {
-        getClient().readClassic(this);
-        showConnectDialog();
-//        getClient().disconnectClassic();
         if (null == mDevice) {
             return;
         }
+        showConnectDialog();
         getClient().registerBluetoothBondListener(mBluetoothBondListener);
-        getClient().connectClassic(mDevice.getAddress(), new ClassicResponse() {
-            @Override
-            public void onResponse(int code, Object data) {
-                if (code == ConstantsClassic.CLASSIC_CON_SECCESS) {
+        if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+            getClient().readClassic(this);
+            getClient().connectClassic(mDevice.getAddress(), new ClassicResponse() {
+                @Override
+                public void onResponse(int code, Object data) {
+                    if (code == ConstantsClassic.CLASSIC_CON_SECCESS) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                sendByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
+                            }
+                        }, 1000);
+
+                    } else {
+                        if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
+                            mConAlertDialog.dismiss();
+                        }
+                        showErrorDialog("蓝牙连接失败", "蓝牙连接失败，是否重新连接", 1);
+                    }
+                }
+            });
+        } else {
+            BleConnectOptions options = new BleConnectOptions.Builder()
+                    .setConnectRetry(3)
+                    .setConnectTimeout(20000)
+                    .setServiceDiscoverRetry(3)
+                    .setServiceDiscoverTimeout(10000)
+                    .build();
+            ClientManager.getClient().connect(mDevice.getAddress(), options, new BleConnectResponse() {
+                @Override
+                public void onResponse(int code, BleGattProfile profile) {
+                    BluetoothLog.v(String.format("profile:\n%s", profile));
+                    if (code == REQUEST_SUCCESS) {
+                        getClient().notify(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, new BleNotifyResponse() {
+                            @Override
+                            public void onNotify(UUID service, UUID character, byte[] value) {
+                                String data = ByteUtils.byteToString((byte[]) value);
+                                BluetoothLog.v(String.format("notify onNotify value:" + data));
+                                resultCallback(value);
+                            }
+
+                            @Override
+                            public void onResponse(int code) {
+                                BluetoothLog.v(String.format("notify onResponse code:" + code));
+                            }
+                        });
+
+                    }
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            sendByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
+                            sendBleByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
                         }
                     }, 1000);
-
-                } else {
-                    if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
-                        mConAlertDialog.dismiss();
-                    }
-                    showErrorDialog("蓝牙连接失败", "蓝牙连接失败，是否重新连接", 1);
                 }
-            }
-        });
+            });
+        }
+
+
     }
 
     private void showScannerDialog() {
@@ -338,21 +398,54 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     }
 
 
+    public void sendBleByteData(byte command, byte[] params, int serialNum) {
+        final byte[] bytes = mBluetoothDataParserImpl.toBytes(command, params, serialNum);
+        final String data = ByteUtils.byteToString(bytes);
+        Log.i(TAG, "write ble data = " + data);
+        getClient().write(mDevice.getAddress(), BLE_WRITE_SERVICE_UUID, BLE_WRITE_CHARACTER_UUID, bytes, new BleWriteResponse() {
+            @Override
+            public void onResponse(int code) {
+                if (0 == code) {
+                    if (null != mSendCommandCallback) {
+                        mSendCommandCallback.onSendData(true, bytes);
+                    }
+                } else {
+                    if (null != mSendCommandCallback) {
+                        mSendCommandCallback.onSendData(false, bytes);
+                    }
+                }
+            }
+        });
+    }
+
+
     @Override
     public void onResponse(int code, Object data) {
         if (code == ConstantsClassic.MESSAGE_READ) {
             byte[] bytes = (byte[]) data;
             String hexStr = ByteUtils.byteToString(bytes);
-            final CommandResult commandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
-            if (null != commandResult) {
-                if (commandResult.isResult()) {
-                    if (commandResult.getType().code == CommandResult.CommandType.AUTH.code) {
-                        if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
-                            mConAlertDialog.dismiss();
-                        }
-                        if (null != mCommandResultCallback) {
-                            mCommandResultCallback.onCommandResult(commandResult);
-                        }
+            resultCallback(bytes);
+        }
+    }
+
+
+    /**
+     * 消息接收处理
+     *
+     * @param bytes
+     */
+    public void resultCallback(byte[] bytes) {
+
+        final CommandResult commandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
+        if (null != commandResult) {
+            if (commandResult.isResult()) {
+                if (commandResult.getType().code == CommandResult.CommandType.AUTH.code) {
+                    if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
+                        mConAlertDialog.dismiss();
+                    }
+                    if (null != mCommandResultCallback) {
+                        mCommandResultCallback.onCommandResult(commandResult);
+                    }
 
 //                        new Handler().postDelayed(new Runnable() {
 //                            @Override
@@ -360,48 +453,47 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 //                                sendByteData((byte) 0x32, commandResult.getSecondCode(), 0);
 //                            }
 //                        }, 500);
-                    } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
+                } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
 
-                        if (null != mCommandResultCallback) {
-                            mCommandResultCallback.onCommandResult(commandResult);
-                        }
-
-                    } else {
-                        if (null != mCommandResultCallback) {
-                            mCommandResultCallback.onCommandResult(commandResult);
-                        }
+                    if (null != mCommandResultCallback) {
+                        mCommandResultCallback.onCommandResult(commandResult);
                     }
-                } else {
-                    if (commandResult.getType().code != CommandResult.CommandType.ILLEGAL_DATA.code) {
-                        if (commandResult.getType().code == CommandResult.CommandType.AUTH.code) {
-                            if (null != mCommandResultCallback) {
-                                mCommandResultCallback.onCommandResult(commandResult);
-                            }
-                            showErrorDialog("蓝牙连接失败", "蓝牙连接失败，是否重新连接", 1);
-                            Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
-                        } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
-                            if (null != mCommandResultCallback) {
-                                mCommandResultCallback.onCommandResult(commandResult);
-                            }
-                            showErrorDialog("蓝牙连接失败", "蓝牙连接失败，是否重新连接", 1);
-                            Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            if (null != mCommandResultCallback) {
-                                mCommandResultCallback.onCommandResult(commandResult);
-                            }
-                        }
 
-                    } else {
-                        if (null != mCommandResultCallback) {
-                            mCommandResultCallback.onCommandResult(commandResult);
-                        }
+                } else {
+                    if (null != mCommandResultCallback) {
+                        mCommandResultCallback.onCommandResult(commandResult);
                     }
                 }
+            } else {
+                if (commandResult.getType().code != CommandResult.CommandType.ILLEGAL_DATA.code) {
+                    if (commandResult.getType().code == CommandResult.CommandType.AUTH.code) {
+                        if (null != mCommandResultCallback) {
+                            mCommandResultCallback.onCommandResult(commandResult);
+                        }
+                        showErrorDialog("蓝牙连接失败", "蓝牙连接失败，是否重新连接", 1);
+                        Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
+                    } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
+                        if (null != mCommandResultCallback) {
+                            mCommandResultCallback.onCommandResult(commandResult);
+                        }
+                        showErrorDialog("蓝牙连接失败", "蓝牙连接失败，是否重新连接", 1);
+                        Toast.makeText(mContext, commandResult.getDesc(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (null != mCommandResultCallback) {
+                            mCommandResultCallback.onCommandResult(commandResult);
+                        }
+                    }
 
+                } else {
+                    if (null != mCommandResultCallback) {
+                        mCommandResultCallback.onCommandResult(commandResult);
+                    }
+                }
             }
 
-
         }
+
+
     }
 
     public void onDestroy() {

@@ -120,14 +120,9 @@ public class DeviceListAdapter extends BaseAdapter implements Comparator<SearchR
         holder.btnProduction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ClassicProductionActivity
-                if (device.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
                     Intent intent = new Intent(mContext, ClassicProductionActivity.class);
                     intent.putExtra("SearchResult", result);
                     mContext.startActivity(intent);
-                } else if (device.getType() == BluetoothDevice.DEVICE_TYPE_LE) {
-
-                }
             }
         });
 
