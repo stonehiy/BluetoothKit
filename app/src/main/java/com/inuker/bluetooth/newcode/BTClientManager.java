@@ -64,12 +64,12 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     private ConnectStatusCallback mConnectStatusCallback;
 
-    private final static UUID BLE_WRITE_SERVICE_UUID = UUID.fromString("0x0000ffe5-0000-1000-8000-00805f9b34fb");
-    private final static UUID BLE_WRITE_CHARACTER_UUID = UUID.fromString("0x0000ffe9-0000-1000-8000-00805f9b34fb");
+    private final static UUID BLE_WRITE_SERVICE_UUID = UUID.fromString("0000ffe5-0000-1000-8000-00805f9b34fb");
+    private final static UUID BLE_WRITE_CHARACTER_UUID = UUID.fromString("0000ffe9-0000-1000-8000-00805f9b34fb");
 
 
-    private final static UUID BLE_NOTIFY_SERVICE_UUID = UUID.fromString("0x0000ffe5-0000-1000-8000-00805f9b34fb");
-    private final static UUID BLE_NOTIFY_CHARACTER_UUID = UUID.fromString("0x0000ffe9-0000-1000-8000-00805f9b34fb");
+    private final static UUID BLE_NOTIFY_SERVICE_UUID = UUID.fromString("0000ffe6-0000-1000-8000-00805f9b34fb");
+    private final static UUID BLE_NOTIFY_CHARACTER_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
 
 
     public void setCommandResultCallback(CommandResultCallback commandResultCallback) {
@@ -423,7 +423,6 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     public void onResponse(int code, Object data) {
         if (code == ConstantsClassic.MESSAGE_READ) {
             byte[] bytes = (byte[]) data;
-            String hexStr = ByteUtils.byteToString(bytes);
             resultCallback(bytes);
         }
     }
