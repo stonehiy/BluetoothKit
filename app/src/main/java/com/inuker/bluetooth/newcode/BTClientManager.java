@@ -68,8 +68,8 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     private final static UUID BLE_WRITE_CHARACTER_UUID = UUID.fromString("0000ffe9-0000-1000-8000-00805f9b34fb");
 
 
-    private final static UUID BLE_NOTIFY_SERVICE_UUID = UUID.fromString("0000ffe6-0000-1000-8000-00805f9b34fb");
-    private final static UUID BLE_NOTIFY_CHARACTER_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
+    private final static UUID BLE_NOTIFY_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
+    private final static UUID BLE_NOTIFY_CHARACTER_UUID = UUID.fromString("0000ffe4-0000-1000-8000-00805f9b34fb");
 
 
     public void setCommandResultCallback(CommandResultCallback commandResultCallback) {
@@ -164,6 +164,9 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     public void onDisconnect() {
         getClient().stopSearch();
         getClient().disconnectClassic();
+        if(null!=mDevice){
+            getClient().disconnect(mDevice.getAddress());
+        }
 //        mBtName = null;
 //        mContext = null;
 //        mDevice = null;
@@ -377,6 +380,14 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
 
     public void sendByteData(byte command, byte[] params, int serialNum) {
+        if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+            sendClassicByteData(command, params, serialNum);
+        } else {
+            sendBleByteData(command, params, serialNum);
+        }
+    }
+
+    public void sendClassicByteData(byte command, byte[] params, int serialNum) {
         byte[] bytes = mBluetoothDataParserImpl.toBytes(command, params, serialNum);
         getClient().writeClassic(bytes, new ClassicResponse() {
             @Override
