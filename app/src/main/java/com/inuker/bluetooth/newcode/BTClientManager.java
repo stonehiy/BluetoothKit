@@ -163,9 +163,12 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     public void onDisconnect() {
         getClient().stopSearch();
-        getClient().disconnectClassic();
-        if(null!=mDevice){
-            getClient().disconnect(mDevice.getAddress());
+        if (null != mDevice) {
+            if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+                getClient().disconnectClassic();
+            } else {
+                getClient().disconnect(mDevice.getAddress());
+            }
         }
 //        mBtName = null;
 //        mContext = null;
