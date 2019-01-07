@@ -320,7 +320,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                                         });
                                         break;
                                     case "BLE2.0":
-                                        getClient().notify(mDevice.getAddress(), BLE_WRITE_SERVICE_UUID, BLE_WRITE_SERVICE_UUID, new BleNotifyResponse() {
+                                        getClient().notify(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_SERVICE_UUID, new BleNotifyResponse() {
                                             @Override
                                             public void onNotify(UUID service, UUID character, byte[] value) {
                                                 String data = ByteUtils.byteToString((byte[]) value);
@@ -423,6 +423,13 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     }
 
 
+    /**
+     * 发送蓝牙数据
+     *
+     * @param command
+     * @param params
+     * @param serialNum
+     */
     public void sendByteData(byte command, byte[] params, int serialNum) {
         if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
             sendClassicByteData(command, params, serialNum);
@@ -431,6 +438,13 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
         }
     }
 
+    /**
+     * 发送经典蓝牙数据
+     *
+     * @param command
+     * @param params
+     * @param serialNum
+     */
     public void sendClassicByteData(byte command, byte[] params, int serialNum) {
         byte[] bytes = mBluetoothDataParserImpl.toBytes(command, params, serialNum);
         getClient().writeClassic(bytes, new ClassicResponse() {
@@ -453,24 +467,59 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     }
 
 
+    /**
+     * 发送ble 数据，这里有两种蓝牙
+     *
+     * @param command
+     * @param params
+     * @param serialNum
+     */
     public void sendBleByteData(byte command, byte[] params, int serialNum) {
         final byte[] bytes = mBluetoothDataParserImpl.toBytes(command, params, serialNum);
         final String data = ByteUtils.byteToString(bytes);
-        Log.i(TAG, "write ble data = " + data);
-        getClient().write(mDevice.getAddress(), BLE_WRITE_SERVICE_UUID, BLE_WRITE_CHARACTER_UUID, bytes, new BleWriteResponse() {
-            @Override
-            public void onResponse(int code) {
-                if (0 == code) {
-                    if (null != mSendCommandCallback) {
-                        mSendCommandCallback.onSendData(true, bytes);
-                    }
-                } else {
-                    if (null != mSendCommandCallback) {
-                        mSendCommandCallback.onSendData(false, bytes);
-                    }
+        String bleName = mDevice.getName();
+        if (null != bleName) {
+            String[] bleTypes = bleName.split("-");
+            if (bleTypes.length == 3) {
+                switch (bleTypes[1]) {
+                    case "BLE":
+                        Log.i(TAG, "write BLE data = " + data);
+                        getClient().write(mDevice.getAddress(), BLE_WRITE_SERVICE_UUID, BLE_WRITE_CHARACTER_UUID, bytes, new BleWriteResponse() {
+                            @Override
+                            public void onResponse(int code) {
+                                if (0 == code) {
+                                    if (null != mSendCommandCallback) {
+                                        mSendCommandCallback.onSendData(true, bytes);
+                                    }
+                                } else {
+                                    if (null != mSendCommandCallback) {
+                                        mSendCommandCallback.onSendData(false, bytes);
+                                    }
+                                }
+                            }
+                        });
+                        break;
+                    case "BLE2.0":
+                        Log.i(TAG, "write BLE2.0 data = " + data);
+                        getClient().write(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, bytes, new BleWriteResponse() {
+                            @Override
+                            public void onResponse(int code) {
+                                if (0 == code) {
+                                    if (null != mSendCommandCallback) {
+                                        mSendCommandCallback.onSendData(true, bytes);
+                                    }
+                                } else {
+                                    if (null != mSendCommandCallback) {
+                                        mSendCommandCallback.onSendData(false, bytes);
+                                    }
+                                }
+                            }
+                        });
+                        break;
                 }
             }
-        });
+        }
+
     }
 
 
