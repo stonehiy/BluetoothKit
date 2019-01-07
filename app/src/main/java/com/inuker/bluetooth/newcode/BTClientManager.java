@@ -104,6 +104,14 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
         return mClient;
     }
 
+
+    /**
+     * 有内存泄漏
+     * 以后优化把static去掉
+     *
+     * @param context
+     * @return
+     */
     public static BTClientManager getInstance(Context context) {
         if (null == mClientManager) {
             mClientManager = new BTClientManager(context);
