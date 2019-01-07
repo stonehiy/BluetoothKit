@@ -291,28 +291,61 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                 public void onResponse(int code, BleGattProfile profile) {
                     BluetoothLog.v(String.format("profile:\n%s", profile));
                     if (code == REQUEST_SUCCESS) {
-                        getClient().notify(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, new BleNotifyResponse() {
-                            @Override
-                            public void onNotify(UUID service, UUID character, byte[] value) {
-                                String data = ByteUtils.byteToString((byte[]) value);
-                                BluetoothLog.v(String.format("notify onNotify value:" + data));
-                                resultCallback(value);
-                            }
+                        String bleName = mDevice.getName();
+                        if (null != bleName) {
+                            String[] bleTypes = bleName.split("-");
+                            if (bleTypes.length == 3) {
+                                switch (bleTypes[1]) {
+                                    case "BLE":
+                                        getClient().notify(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, new BleNotifyResponse() {
+                                            @Override
+                                            public void onNotify(UUID service, UUID character, byte[] value) {
+                                                String data = ByteUtils.byteToString((byte[]) value);
+                                                BluetoothLog.v(String.format("BLE notify onNotify value:" + data));
+                                                resultCallback(value);
+                                            }
 
-                            @Override
-                            public void onResponse(int code) {
-                                BluetoothLog.v(String.format("notify onResponse code:" + code));
-                            }
-                        });
+                                            @Override
+                                            public void onResponse(int code) {
+                                                BluetoothLog.v(String.format("BLE notify onResponse code:" + code));
+                                            }
+                                        });
+                                        break;
+                                    case "BLE2.0":
+                                        getClient().notify(mDevice.getAddress(), BLE_WRITE_SERVICE_UUID, BLE_WRITE_SERVICE_UUID, new BleNotifyResponse() {
+                                            @Override
+                                            public void onNotify(UUID service, UUID character, byte[] value) {
+                                                String data = ByteUtils.byteToString((byte[]) value);
+                                                BluetoothLog.v(String.format("BLE2.0 notify onNotify value:" + data));
+                                                resultCallback(value);
+                                            }
 
+                                            @Override
+                                            public void onResponse(int code) {
+                                                BluetoothLog.v(String.format("BLE2.0 notify onResponse code:" + code));
+                                            }
+                                        });
+
+                                        break;
+                                }
+                            }
+                        }
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                sendByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
+                            }
+                        }, 1000);
+
+                    } else {
+                        if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
+                            mConAlertDialog.dismiss();
+                        }
+                        showErrorDialog("蓝牙连接失败", "蓝牙连接失败，是否重新连接", 1);
                     }
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            sendBleByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
-                        }
-                    }, 1000);
+
                 }
             });
         }
