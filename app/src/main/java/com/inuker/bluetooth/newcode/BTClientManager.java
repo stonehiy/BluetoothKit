@@ -529,7 +529,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     }
 
     public void ble20Read() {
-        getClient().read(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_SERVICE_UUID, new BleReadResponse() {
+        getClient().readDescriptor(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_SERVICE_UUID,BLE_DESCRIPTOR_UUID, new BleReadResponse() {
             @Override
             public void onResponse(int code, byte[] data) {
                 BluetoothLog.v(String.format("BLE20 read onNotify value:" + data));
