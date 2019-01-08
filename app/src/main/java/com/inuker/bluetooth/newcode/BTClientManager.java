@@ -501,7 +501,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                         break;
                     case "BLE20"://mc20
                         Log.i(TAG, "write BLE20 data = " + data);
-                        getClient().writeNoRsp(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, bytes, new BleWriteResponse() {
+                        getClient().write(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, bytes, new BleWriteResponse() {
                             @Override
                             public void onResponse(int code) {
                                 if (0 == code) {
