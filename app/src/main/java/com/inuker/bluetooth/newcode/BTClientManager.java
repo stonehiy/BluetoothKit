@@ -178,21 +178,6 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                 getClient().disconnect(mDevice.getAddress());
             }
         }
-//        mBtName = null;
-//        mContext = null;
-//        mDevice = null;
-//        mClientManager = null;
-//        mBtName = null;
-//        mClientManager = null;
-//        mClient = null;
-//        mContext = null;
-//        mScannerDialog = null;
-//        mConAlertDialog = null;
-//        mBluetoothDataParserImpl = null;
-//        mDevice = null;
-//        mCommandResultCallback = null;
-//        mSendCommandCallback = null;
-//        mConnectStatusCallback = null;
     }
 
 
@@ -603,8 +588,11 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     public void onDestroy() {
         onDisconnect();
         if (null != mDevice) {
-            getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
-            getClient().unregisterClassicConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+            if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+                getClient().unregisterClassicConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+            } else {
+                getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
+            }
         }
         getClient().unregisterBluetoothBondListener(mBluetoothBondListener);
 
