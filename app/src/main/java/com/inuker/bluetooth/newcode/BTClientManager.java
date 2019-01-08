@@ -21,6 +21,7 @@ import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
+import com.inuker.bluetooth.library.connect.response.BleReadResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.connect.response.ClassicResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
@@ -70,6 +71,12 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     private final static UUID BLE_NOTIFY_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
     private final static UUID BLE_NOTIFY_CHARACTER_UUID = UUID.fromString("0000ffe4-0000-1000-8000-00805f9b34fb");
+
+
+    private final static UUID BLE_DESCRIPTOR_UUID = UUID.fromString("000001d0-0000-1000-8000-00805f9b34fb");
+
+
+    private String mBleType;
 
 
     public void setCommandResultCallback(CommandResultCallback commandResultCallback) {
@@ -155,7 +162,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     public void onCreateConnect() {
         getClient().stopSearch();
         if (null != mDevice) {
-            if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+            if ("3.0".equalsIgnoreCase(mBleType)) {
                 getClient().registerClassicConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
             } else {
                 getClient().registerConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
@@ -172,7 +179,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     public void onDisconnect() {
         getClient().stopSearch();
         if (null != mDevice) {
-            if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+            if ("3.0".equalsIgnoreCase(mBleType)) {
                 getClient().disconnectClassic();
             } else {
                 getClient().disconnect(mDevice.getAddress());
@@ -200,6 +207,13 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
             mDevice = device;
             if (null != mScannerDialog && mScannerDialog.isShowing()) {
                 mScannerDialog.dismiss();
+            }
+            String bleName = mDevice.getName();
+            if (null != bleName) {
+                String[] bleTypes = bleName.split("-");
+                if (bleTypes.length == 3) {
+                    mBleType = bleTypes[1];
+                }
             }
             onCreateConnect();
         }
@@ -251,7 +265,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
         }
         showConnectDialog();
         getClient().registerBluetoothBondListener(mBluetoothBondListener);
-        if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+        if ("3.0".equalsIgnoreCase(mBleType)) {
             getClient().readClassic(this);
             getClient().connectClassic(mDevice.getAddress(), new ClassicResponse() {
                 @Override
@@ -304,13 +318,12 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                                             }
                                         });
                                         break;
-                                    case "BLE2.0":
+                                    case "BLE20":
                                         getClient().notify(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_SERVICE_UUID, new BleNotifyResponse() {
                                             @Override
                                             public void onNotify(UUID service, UUID character, byte[] value) {
                                                 String data = ByteUtils.byteToString((byte[]) value);
-                                                BluetoothLog.v(String.format("BLE2.0 notify onNotify value:" + data));
-                                                resultCallback(value);
+                                                BluetoothLog.v(String.format("BLE20 notify onNotify value:" + data));
                                             }
 
                                             @Override
@@ -318,6 +331,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                                                 BluetoothLog.v(String.format("BLE2.0 notify onResponse code:" + code));
                                             }
                                         });
+
 
                                         break;
                                 }
@@ -485,8 +499,8 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                             }
                         });
                         break;
-                    case "BLE2.0"://mc2.0
-                        Log.i(TAG, "write BLE2.0 data = " + data);
+                    case "BLE20"://mc20
+                        Log.i(TAG, "write BLE20 data = " + data);
                         getClient().writeNoRsp(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, bytes, new BleWriteResponse() {
                             @Override
                             public void onResponse(int code) {
@@ -494,6 +508,12 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                                     if (null != mSendCommandCallback) {
                                         mSendCommandCallback.onSendData(true, bytes);
                                     }
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ble20Read();
+                                        }
+                                    }, 1000);
                                 } else {
                                     if (null != mSendCommandCallback) {
                                         mSendCommandCallback.onSendData(false, bytes);
@@ -506,6 +526,16 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
             }
         }
 
+    }
+
+    public void ble20Read() {
+        getClient().read(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_SERVICE_UUID, new BleReadResponse() {
+            @Override
+            public void onResponse(int code, byte[] data) {
+                BluetoothLog.v(String.format("BLE20 read onNotify value:" + data));
+                resultCallback(data);
+            }
+        });
     }
 
 
@@ -535,13 +565,6 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                     if (null != mCommandResultCallback) {
                         mCommandResultCallback.onCommandResult(commandResult);
                     }
-
-//                        new Handler().postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                sendByteData((byte) 0x32, commandResult.getSecondCode(), 0);
-//                            }
-//                        }, 500);
                 } else if (commandResult.getType().code == CommandResult.CommandType.SECOND_AUTH.code) {
 
                     if (null != mCommandResultCallback) {
@@ -588,7 +611,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     public void onDestroy() {
         onDisconnect();
         if (null != mDevice) {
-            if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+            if ("3.0".equalsIgnoreCase(mBleType)) {
                 getClient().unregisterClassicConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
             } else {
                 getClient().unregisterConnectStatusListener(mDevice.getAddress(), mConnectStatusListener);
