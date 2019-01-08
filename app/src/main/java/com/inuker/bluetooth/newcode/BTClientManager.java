@@ -469,6 +469,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     /**
      * 发送ble 数据，这里有两种蓝牙
+     * 4g和mc2.0
      *
      * @param command
      * @param params
@@ -482,7 +483,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
             String[] bleTypes = bleName.split("-");
             if (bleTypes.length == 3) {
                 switch (bleTypes[1]) {
-                    case "BLE":
+                    case "BLE"://4g
                         Log.i(TAG, "write BLE data = " + data);
                         getClient().write(mDevice.getAddress(), BLE_WRITE_SERVICE_UUID, BLE_WRITE_CHARACTER_UUID, bytes, new BleWriteResponse() {
                             @Override
@@ -499,9 +500,9 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                             }
                         });
                         break;
-                    case "BLE2.0":
+                    case "BLE2.0"://mc2.0
                         Log.i(TAG, "write BLE2.0 data = " + data);
-                        getClient().write(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, bytes, new BleWriteResponse() {
+                        getClient().writeNoRsp(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, bytes, new BleWriteResponse() {
                             @Override
                             public void onResponse(int code) {
                                 if (0 == code) {
