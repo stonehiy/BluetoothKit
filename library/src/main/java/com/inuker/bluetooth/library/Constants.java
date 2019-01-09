@@ -62,6 +62,8 @@ public class Constants {
     public static final int SEARCH_TYPE_BLE = 2;
 
     public static final UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+    //ble蓝牙 mc20
+    public final static UUID BLE20_DESCRIPTOR_UUID = UUID.fromString("000001d0-0000-1000-8000-00805f9b34fb");
 
     public static final int CODE_CONNECT = 1;
     public static final int CODE_DISCONNECT = 2;

@@ -22,6 +22,7 @@ import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleReadResponse;
+import com.inuker.bluetooth.library.connect.response.BleUnnotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.connect.response.ClassicResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
@@ -72,8 +73,8 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     private final static UUID BLE_NOTIFY_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
     private final static UUID BLE_NOTIFY_CHARACTER_UUID = UUID.fromString("0000ffe4-0000-1000-8000-00805f9b34fb");
 
-
-    private final static UUID BLE_DESCRIPTOR_UUID = UUID.fromString("000001d0-0000-1000-8000-00805f9b34fb");
+    //ble蓝牙 mc20
+    public final static UUID BLE20_DESCRIPTOR_UUID = UUID.fromString("000001d0-0000-1000-8000-00805f9b34fb");
 
 
     private String mBleType;
@@ -151,8 +152,8 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
 
     private void searchDevice() {
         SearchRequest request = new SearchRequest.Builder()
-                .searchBluetoothLeDevice(5000, 2)// // 先扫BLE设备3次，每次3s
-                .searchBluetoothClassicDevice(5000, 2) // 再扫经典蓝牙5s
+                .searchBluetoothLeDevice(5000, 1)// // 先扫BLE设备3次，每次3s
+                .searchBluetoothClassicDevice(5000, 1) // 再扫经典蓝牙5s
                 .build();
 
         getClient().search(request, this);
@@ -319,16 +320,17 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                                         });
                                         break;
                                     case "BLE20":
-                                        getClient().notify(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_SERVICE_UUID, new BleNotifyResponse() {
+                                        getClient().notify(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, new BleNotifyResponse() {
                                             @Override
                                             public void onNotify(UUID service, UUID character, byte[] value) {
                                                 String data = ByteUtils.byteToString((byte[]) value);
                                                 BluetoothLog.v(String.format("BLE20 notify onNotify value:" + data));
+                                                resultCallback(value);
                                             }
 
                                             @Override
                                             public void onResponse(int code) {
-                                                BluetoothLog.v(String.format("BLE2.0 notify onResponse code:" + code));
+                                                BluetoothLog.v(String.format("BLE20 notify onResponse code:" + code));
                                             }
                                         });
 
@@ -501,19 +503,21 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                         break;
                     case "BLE20"://mc20
                         Log.i(TAG, "write BLE20 data = " + data);
-                        getClient().write(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, bytes, new BleWriteResponse() {
+                        getClient().writeDescriptor(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, BLE20_DESCRIPTOR_UUID, bytes, new BleWriteResponse() {
                             @Override
                             public void onResponse(int code) {
                                 if (0 == code) {
                                     if (null != mSendCommandCallback) {
                                         mSendCommandCallback.onSendData(true, bytes);
                                     }
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ble20Read();
-                                        }
-                                    }, 1000);
+
+//                                    new Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            ble20Read();
+//                                        }
+//                                    }, 5000);
+
                                 } else {
                                     if (null != mSendCommandCallback) {
                                         mSendCommandCallback.onSendData(false, bytes);
@@ -529,7 +533,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
     }
 
     public void ble20Read() {
-        getClient().readDescriptor(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_SERVICE_UUID,BLE_DESCRIPTOR_UUID, new BleReadResponse() {
+        getClient().readDescriptor(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, BLE20_DESCRIPTOR_UUID, new BleReadResponse() {
             @Override
             public void onResponse(int code, byte[] data) {
                 BluetoothLog.v(String.format("BLE20 read onNotify value:" + data));

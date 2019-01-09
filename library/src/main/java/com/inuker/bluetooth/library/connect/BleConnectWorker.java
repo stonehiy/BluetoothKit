@@ -288,7 +288,7 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
     }
 
     private void broadcastCharacterChanged(UUID service, UUID character,
-    byte[] value) {
+                                           byte[] value) {
         Intent intent = new Intent(
                 Constants.ACTION_CHARACTER_CHANGED);
         intent.putExtra(Constants.EXTRA_MAC,
@@ -609,6 +609,14 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
 
         BluetoothGattDescriptor descriptor = characteristic.getDescriptor(Constants.CLIENT_CHARACTERISTIC_CONFIG);
 
+        if (null == descriptor) {
+//            descriptor = characteristic.getDescriptor(Constants.BLE20_DESCRIPTOR_UUID);
+            List<BluetoothGattDescriptor> descriptors = characteristic.getDescriptors();
+            for (BluetoothGattDescriptor descriptor1:descriptors ) {
+                descriptor = descriptor1;
+            }
+        }
+
         if (descriptor == null) {
             BluetoothLog.e(String.format("getDescriptor for notify null!"));
             return false;
@@ -659,6 +667,14 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
         }
 
         BluetoothGattDescriptor descriptor = characteristic.getDescriptor(Constants.CLIENT_CHARACTERISTIC_CONFIG);
+
+        if (null == descriptor) {
+//            descriptor = characteristic.getDescriptor(Constants.BLE20_DESCRIPTOR_UUID);
+            List<BluetoothGattDescriptor> descriptors = characteristic.getDescriptors();
+            for (int i = 0; i < descriptors.size(); i++) {
+                descriptor = characteristic.getDescriptors().get(i);
+            }
+        }
 
         if (descriptor == null) {
             BluetoothLog.e(String.format("getDescriptor for indicate null!"));
