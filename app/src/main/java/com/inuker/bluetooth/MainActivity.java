@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
             ClientManager.getClient().openBluetooth();
         }
         SearchRequest request = new SearchRequest.Builder()
-                .searchBluetoothLeDevice(5000, 3)// // 先扫BLE设备3次，每次3s
-                .searchBluetoothClassicDevice(5000, 3) // 再扫经典蓝牙5s
+                .searchBluetoothLeDevice(5000, 1)// // 先扫BLE设备3次，每次3s
+                .searchBluetoothClassicDevice(5000, 1) // 再扫经典蓝牙5s
                 .build();
 
         ClientManager.getClient().search(request, mSearchResponse);
