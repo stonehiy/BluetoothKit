@@ -432,7 +432,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
      * @param serialNum
      */
     public void sendByteData(byte command, byte[] params, int serialNum) {
-        if (mDevice.getType() == BluetoothDevice.DEVICE_TYPE_CLASSIC) {
+        if ("3.0".equalsIgnoreCase(mBleType)) {
             sendClassicByteData(command, params, serialNum);
         } else {
             sendBleByteData(command, params, serialNum);
