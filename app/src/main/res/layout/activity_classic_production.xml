@@ -92,14 +92,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="取消激活" />
+                    android:text="启动离线" />
 
                 <Button
                     android:id="@+id/btnUnoffChargeStart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="激活" />
+                    android:text="禁止离线" />
 
                 <Button
                     android:id="@+id/btnPileNo"
