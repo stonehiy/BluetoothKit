@@ -277,7 +277,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                             public void run() {
                                 sendByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
                             }
-                        }, 1000);
+                        }, 100);
 
                     } else {
                         if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
@@ -345,7 +345,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                             public void run() {
                                 sendByteData((byte) 0x31, new byte[]{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,}, 0);
                             }
-                        }, 1000);
+                        }, 100);
 
                     } else {
                         if (null != mConAlertDialog && mConAlertDialog.isShowing()) {
