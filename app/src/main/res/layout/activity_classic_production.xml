@@ -109,6 +109,70 @@
                     android:text="下发充电桩号" />
 
                 <Button
+                    android:id="@+id/btnSetPilePower"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="设置桩功率" />
+
+                <Button
+                    android:id="@+id/btnGetPileNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="获取桩编号" />
+
+                <Button
+                    android:id="@+id/btnGetPileCompany"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="获取桩供应商信息" />
+                <Button
+                    android:id="@+id/btnGetPilePower"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="获取桩硬件版本" />
+                <Button
+                    android:id="@+id/btnGetPileHVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="获取桩硬件版本" />
+                <Button
+                    android:id="@+id/btnGetPileFVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="获取桩软件版本" />
+                <Button
+                    android:id="@+id/btnGetPileBVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="获取桩bootloader版本" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <Button
                     android:id="@+id/btnClose"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

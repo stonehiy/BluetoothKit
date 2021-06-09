@@ -41,10 +41,48 @@ public class CommandResult {
          * 禁止离线自动充电
          */
         UNOFF_CHARGE_START(6),
+
         /**
          * 设置桩号
          */
-        SET_PILE_NO(7);
+        SET_PILE_NO(7),
+
+        /**
+         * 设置桩功率
+         */
+        SET_PILE_POWER(8),
+
+
+        /**
+         * 获取桩号
+         */
+        GET_PILE_NO(31),
+
+        /**
+         * 获取桩供应商信息
+         */
+        GET_PILE_COMPANY(32),
+
+        /**
+         * 获取额定功率
+         */
+        GET_PILE_POWER(33),
+
+
+        /**
+         * 获取硬件版本
+         */
+        GET_PILE_HARDWARE_VERSION(34),
+
+        /**
+         * 获取软件版本
+         */
+        GET_PILE_SOFTWARE_VERSION(35),
+
+        /**
+         * 获取bootloader软件版本
+         */
+        GET_PILE_BOOTLOADER_VERSION(36);
 
         public final int code;
 
@@ -54,6 +92,12 @@ public class CommandResult {
 
     }
 
+//    31.桩编号
+//    32.桩供应商信息
+//    33.额定功率
+//    34.硬件版本
+//    35.软件版本
+//    36.bootloader 软件版本
 
     private CommandType type;//0.非法数据 1.首次鉴权，2.二次鉴权，3.启动充电，4.停止充电,舍弃,5.启用离线自动充电,6.禁止离线自动充电
     private String typeDesc;

@@ -114,6 +114,28 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
         } else if (i == R.id.btnClear) {
             mConversationArrayAdapter.clear();
             mConversationArrayAdapter.notifyDataSetChanged();
+        } else if (i == R.id.btnSetPilePower) {
+
+        } else if (i == R.id.btnGetPileNo) {
+            byte[] parms = new byte[]{(byte) 0xA1};
+            BTClientManager.getInstance(this).sendByteData((byte) 0x11, parms, 0);
+        } else if (i == R.id.btnGetPileCompany) {
+            byte[] parms = new byte[]{(byte) 0xA2};
+            BTClientManager.getInstance(this).sendByteData((byte) 0x11, parms, 0);
+
+        } else if (i == R.id.btnGetPilePower) {
+            byte[] parms = new byte[]{(byte) 0xA3};
+            BTClientManager.getInstance(this).sendByteData((byte) 0x11, parms, 0);
+        }
+        else if (i == R.id.btnGetPileHVersion) {
+            byte[] parms = new byte[]{(byte) 0xA4};
+            BTClientManager.getInstance(this).sendByteData((byte) 0x11, parms, 0);
+        } else if (i == R.id.btnGetPileFVersion) {
+            byte[] parms = new byte[]{(byte) 0xA5};
+            BTClientManager.getInstance(this).sendByteData((byte) 0x11, parms, 0);
+        } else if (i == R.id.btnGetPileBVersion) {
+            byte[] parms = new byte[]{(byte) 0xA6};
+            BTClientManager.getInstance(this).sendByteData((byte) 0x11, parms, 0);
         }
 
     }
