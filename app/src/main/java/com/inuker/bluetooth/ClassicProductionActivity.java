@@ -59,6 +59,14 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
         Button btnClose = (Button) findViewById(R.id.btnClose);
         Button btnRecon = (Button) findViewById(R.id.btnRecon);
         Button btnClear = (Button) findViewById(R.id.btnClear);
+
+        Button btnSetPilePower = (Button) findViewById(R.id.btnSetPilePower);
+        Button btnGetPileNo = (Button) findViewById(R.id.btnGetPileNo);
+        Button btnGetPileCompany = (Button) findViewById(R.id.btnGetPileCompany);
+        Button btnGetPilePower = (Button) findViewById(R.id.btnGetPilePower);
+        Button btnGetPileHVersion = (Button) findViewById(R.id.btnGetPileHVersion);
+        Button btnGetPileFVersion = (Button) findViewById(R.id.btnGetPileFVersion);
+        Button btnGetPileBVersion = (Button) findViewById(R.id.btnGetPileBVersion);
         btnFirstAuth.setOnClickListener(this);
         btnSecondAuth.setOnClickListener(this);
         btnChargeStart.setOnClickListener(this);
@@ -69,6 +77,14 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
         btnClose.setOnClickListener(this);
         btnRecon.setOnClickListener(this);
         btnClear.setOnClickListener(this);
+
+        btnSetPilePower.setOnClickListener(this);
+        btnGetPileNo.setOnClickListener(this);
+        btnGetPileCompany.setOnClickListener(this);
+        btnGetPilePower.setOnClickListener(this);
+        btnGetPileHVersion.setOnClickListener(this);
+        btnGetPileFVersion.setOnClickListener(this);
+        btnGetPileBVersion.setOnClickListener(this);
 
 
         // Initialize the array adapter for the conversation thread
