@@ -6,13 +6,11 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.inuker.bluetooth.ClientManager;
 import com.inuker.bluetooth.MyApplication;
 import com.inuker.bluetooth.library.BluetoothClient;
-import com.inuker.bluetooth.library.Constants;
 import com.inuker.bluetooth.library.ConstantsClassic;
 import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
 import com.inuker.bluetooth.library.beacon.CommandResult;
@@ -22,7 +20,6 @@ import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
 import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleReadResponse;
-import com.inuker.bluetooth.library.connect.response.BleUnnotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.connect.response.ClassicResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
@@ -308,7 +305,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                                         getClient().notify(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, new BleNotifyResponse() {
                                             @Override
                                             public void onNotify(UUID service, UUID character, byte[] value) {
-                                                String data = ByteUtils.byteToString((byte[]) value);
+                                                String data = ByteUtils.byteToHexString((byte[]) value);
                                                 BluetoothLog.v(String.format("BLE notify onNotify value:" + data));
                                                 resultCallback(value);
                                             }
@@ -323,7 +320,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
                                         getClient().notify(mDevice.getAddress(), BLE_NOTIFY_SERVICE_UUID, BLE_NOTIFY_CHARACTER_UUID, new BleNotifyResponse() {
                                             @Override
                                             public void onNotify(UUID service, UUID character, byte[] value) {
-                                                String data = ByteUtils.byteToString((byte[]) value);
+                                                String data = ByteUtils.byteToHexString((byte[]) value);
                                                 BluetoothLog.v(String.format("BLE20 notify onNotify value:" + data));
                                                 resultCallback(value);
                                             }
@@ -448,11 +445,13 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
      */
     public void sendClassicByteData(byte command, byte[] params, int serialNum) {
         byte[] bytes = mBluetoothDataParserImpl.toBytes(command, params, serialNum);
+        String bytesHex = ByteUtils.byteToHexString(bytes);
+        Log.i(TAG, "writeClassic byteHex = " + bytesHex);
         getClient().writeClassic(bytes, new ClassicResponse() {
             @Override
             public void onResponse(int code, Object data) {
                 if (code == ConstantsClassic.MESSAGE_WRITE) {
-                    String s = ByteUtils.byteToString((byte[]) data);
+                    String s = ByteUtils.byteToHexString((byte[]) data);
                     Log.i(TAG, "writeClassic data = " + s);
                     if (null != mSendCommandCallback) {
                         mSendCommandCallback.onSendData(true, (byte[]) data);
@@ -478,7 +477,7 @@ public class BTClientManager implements SearchResponse, ClassicResponse {
      */
     public void sendBleByteData(byte command, byte[] params, int serialNum) {
         final byte[] bytes = mBluetoothDataParserImpl.toBytes(command, params, serialNum);
-        final String data = ByteUtils.byteToString(bytes);
+        final String data = ByteUtils.byteToHexString(bytes);
         String bleName = mDevice.getName();
         if (null != bleName) {
             String[] bleTypes = bleName.split("-");

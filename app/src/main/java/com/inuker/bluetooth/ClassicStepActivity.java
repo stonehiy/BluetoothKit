@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -84,7 +83,7 @@ public class ClassicStepActivity extends AppCompatActivity implements View.OnCli
             public void onResponse(int code, Object data) {
                 if (code == ConstantsClassic.MESSAGE_READ) {
                     byte[] bytes = (byte[]) data;
-                    String hexStr = ByteUtils.byteToString(bytes);
+                    String hexStr = ByteUtils.byteToHexString(bytes);
                     CommandResult commandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
                     if (null != commandResult) {
                         if (commandResult.isResult()) {
@@ -179,7 +178,7 @@ public class ClassicStepActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onResponse(int code, Object data) {
                 if (code == ConstantsClassic.MESSAGE_WRITE) {
-                    String s = ByteUtils.byteToString((byte[]) data);
+                    String s = ByteUtils.byteToHexString((byte[]) data);
                     mConversationArrayAdapter.add("Send:" + s);
                     mConversationArrayAdapter.notifyDataSetChanged();
                     Log.i(TAG, "writeClassic data = " + s);
@@ -288,7 +287,7 @@ public class ClassicStepActivity extends AppCompatActivity implements View.OnCli
                     return;
                 }
                 byte[] b1 = new byte[]{(byte) 0xA5};
-                byte[] b2 = ByteUtils.stringToBytes(pileNo);
+                byte[] b2 = ByteUtils.hexStringToBytes(pileNo);
                 byte[] bytes = byteMerger(b1, b2);
                 sendByteData((byte) 0x10, bytes, 0);
                 alertDialog.dismiss();

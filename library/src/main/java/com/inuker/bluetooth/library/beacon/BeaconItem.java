@@ -50,7 +50,7 @@ public class BeaconItem {
             }
             sb.append(sbSub.toString());
         } catch (Exception e) {
-            sb.append(ByteUtils.byteToString(bytes));
+            sb.append(ByteUtils.byteToHexString(bytes));
         }
 
         return sb.toString();

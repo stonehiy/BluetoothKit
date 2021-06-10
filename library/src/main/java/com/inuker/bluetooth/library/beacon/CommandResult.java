@@ -1,6 +1,8 @@
 package com.inuker.bluetooth.library.beacon;
 
 
+import java.util.Arrays;
+
 public class CommandResult {
 
     /**
@@ -192,5 +194,18 @@ public class CommandResult {
 
     public void setResultBytes(byte[] resultBytes) {
         this.resultBytes = resultBytes;
+    }
+
+
+    @Override
+    public String toString() {
+        return "CommandResult{" +
+                "type=" + type +
+                ", typeDesc='" + typeDesc + '\'' +
+                ", result=" + result +
+                ", desc='" + desc + '\'' +
+                ", secondCode=" + Arrays.toString(secondCode) +
+                ", resultBytes=" + Arrays.toString(resultBytes) +
+                '}';
     }
 }

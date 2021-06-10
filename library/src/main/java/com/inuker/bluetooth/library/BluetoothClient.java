@@ -1,7 +1,6 @@
 package com.inuker.bluetooth.library;
 
 import android.annotation.TargetApi;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Build;
@@ -88,7 +87,7 @@ public class BluetoothClient implements IBluetoothClient {
     @Override
     public void write(String mac, UUID service, UUID character, byte[] value, BleWriteResponse response) {
         BluetoothLog.v(String.format("write character for %s: service = %s, character = %s, value = %s",
-                mac, service, character, ByteUtils.byteToString(value)));
+                mac, service, character, ByteUtils.byteToHexString(value)));
 
         response = ProxyUtils.getUIProxy(response);
         mClient.write(mac, service, character, value, response);
@@ -117,7 +116,7 @@ public class BluetoothClient implements IBluetoothClient {
 
     @Override
     public void writeNoRsp(String mac, UUID service, UUID character, byte[] value, BleWriteResponse response) {
-        BluetoothLog.v(String.format("writeNoRsp %s: service = %s, character = %s, value = %s", mac, service, character, ByteUtils.byteToString(value)));
+        BluetoothLog.v(String.format("writeNoRsp %s: service = %s, character = %s, value = %s", mac, service, character, ByteUtils.byteToHexString(value)));
 
         response = ProxyUtils.getUIProxy(response);
         mClient.writeNoRsp(mac, service, character, value, response);

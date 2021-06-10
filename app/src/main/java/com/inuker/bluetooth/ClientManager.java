@@ -238,7 +238,7 @@ public class ClientManager implements SearchResponse, ClassicResponse {
             @Override
             public void onResponse(int code, Object data) {
                 if (code == ConstantsClassic.MESSAGE_WRITE) {
-                    String s = ByteUtils.byteToString((byte[]) data);
+                    String s = ByteUtils.byteToHexString((byte[]) data);
                     Log.i(TAG, "writeClassic data = " + s);
                 } else {
                     Log.i(TAG, "writeClassic data failed ,bt not connected ");
@@ -252,7 +252,7 @@ public class ClientManager implements SearchResponse, ClassicResponse {
     public void onResponse(int code, Object data) {
         if (code == ConstantsClassic.MESSAGE_READ) {
             byte[] bytes = (byte[]) data;
-            String hexStr = ByteUtils.byteToString(bytes);
+            String hexStr = ByteUtils.byteToHexString(bytes);
             CommandResult commandResult = mBluetoothDataParserImpl.parseFromBytes(bytes);
             if (null != commandResult) {
                 if (commandResult.isResult()) {

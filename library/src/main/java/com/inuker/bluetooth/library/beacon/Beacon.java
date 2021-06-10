@@ -27,7 +27,7 @@ public class Beacon {
         // TODO Auto-generated method stub
         StringBuilder sb = new StringBuilder();
 
-        sb.append(String.format("preParse: %s\npostParse:\n", ByteUtils.byteToString(mBytes)));
+        sb.append(String.format("preParse: %s\npostParse:\n", ByteUtils.byteToHexString(mBytes)));
 
         for (int i = 0; i < mItems.size(); i++) {
             sb.append(mItems.get(i).toString());

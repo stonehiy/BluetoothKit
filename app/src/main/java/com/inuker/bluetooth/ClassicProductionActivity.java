@@ -2,9 +2,7 @@ package com.inuker.bluetooth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -195,7 +193,7 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
                     return;
                 }
                 byte[] b1 = new byte[]{(byte) 0xA5};
-                byte[] b2 = ByteUtils.stringToBytes(pileNo);
+                byte[] b2 = ByteUtils.hexStringToBytes(pileNo);
                 byte[] bytes = byteMerger(b1, b2);
                 BTClientManager.getInstance(ClassicProductionActivity.this).sendByteData((byte) 0x10, bytes, 0);
                 alertDialog.dismiss();
@@ -232,7 +230,7 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
 
     @Override
     public void onCommandResult(CommandResult commandResult) {
-        String resultData = ByteUtils.byteToString(commandResult.getResultBytes());
+        String resultData = ByteUtils.byteToHexString(commandResult.getResultBytes());
         mConversationArrayAdapter.add("received command:" + resultData);
         mConversationArrayAdapter.add("received desc:" + commandResult.getDesc());
         mConversationArrayAdapter.notifyDataSetChanged();
@@ -242,7 +240,7 @@ public class ClassicProductionActivity extends AppCompatActivity implements View
 
     @Override
     public void onSendData(boolean isSuccess, byte[] data) {
-        String sendData = ByteUtils.byteToString(data);
+        String sendData = ByteUtils.byteToHexString(data);
         if (isSuccess) {
             mConversationArrayAdapter.add("send success:" + sendData);
         } else {

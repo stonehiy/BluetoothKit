@@ -1,6 +1,5 @@
 package com.inuker.bluetooth.library.beacon;
 
-import com.inuker.bluetooth.library.utils.BluetoothLog;
 import com.inuker.bluetooth.library.utils.ByteUtils;
 
 import java.nio.ByteBuffer;
@@ -8,9 +7,11 @@ import java.nio.ByteBuffer;
 public class Test {
 
     public static void main(String[] str) {
+        String str1 = "640C11A1010755000000005555EF";
         String s = "640B3101080706050403020133";
-        byte[] bytes = ByteUtils.stringToBytes(s);
+        byte[] bytes = ByteUtils.hexStringToBytes(str1);
         CommandResult commandResult = parseData(bytes);
+        System.out.println("commandResult ="+commandResult);
 
     }
 

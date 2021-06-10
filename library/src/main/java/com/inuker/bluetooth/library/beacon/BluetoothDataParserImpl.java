@@ -9,7 +9,6 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.util.Arrays;
 
 
 /**
@@ -226,7 +225,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
                         result.setResult(false);
                         result.setDesc("设置电桩号失败");
                     }
-                }else if(resultType == (byte)0xA6){
+                } else if (resultType == (byte) 0xA6) {
                     result.setType(CommandResult.CommandType.SET_PILE_POWER);
                     result.setTypeDesc("设置功率");
                     if (0x01 == resultCode) {
@@ -251,74 +250,75 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
             case 0x11:
                 byte ry = bb.get();
                 byte rc = bb.get();
-                if (ry == (byte)0xA1) {
+                if (ry == (byte) 0xA1) {
                     result.setType(CommandResult.CommandType.GET_PILE_NO);
                     result.setTypeDesc("获取桩编号");
                     if (rc == 0x01) {
                         result.setResult(true);
-                        byte[] body = new byte[buffer.length - 7];
+                        byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
-                        result.setDesc("桩编号：" + byteBuffer2String(bf));
+                        result.setDesc("桩编号：" + ByteUtils.byteToHexString(body));
                     } else {
                         result.setResult(false);
                         result.setDesc("获取桩编号失败");
                     }
-                }else if(ry == (byte) 0xA2){
+                } else if (ry == (byte) 0xA2) {
                     result.setType(CommandResult.CommandType.GET_PILE_COMPANY);
                     result.setTypeDesc("获取桩供应商信息");
                     if (rc == 0x01) {
                         result.setResult(true);
-                        byte[] body = new byte[buffer.length - 7];
+                        byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
-                        result.setDesc("桩供应商信息：" + byteBuffer2String(bf));
+                        result.setDesc("桩供应商信息：" +  ByteUtils.byteToHexString(body));
                     } else {
                         result.setResult(false);
                         result.setDesc("获取桩供应商信息失败");
                     }
-                }else if(ry == (byte) 0xA3){
+                } else if (ry == (byte) 0xA3) {
                     result.setType(CommandResult.CommandType.GET_PILE_POWER);
                     result.setTypeDesc("获取额定功率");
                     if (rc == 0x01) {
                         result.setResult(true);
-                        byte[] body = new byte[buffer.length - 7];
+                        byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
-                        result.setDesc("额定功率：" + byteBuffer2String(bf));
+                        result.setDesc("额定功率：" +  ByteUtils.byteToHexString(body));
                     } else {
                         result.setResult(false);
                         result.setDesc("获取额定功率失败");
                     }
-                }else if(ry == (byte) 0xA4){
+                } else if (ry == (byte) 0xA4) {
                     result.setType(CommandResult.CommandType.GET_PILE_HARDWARE_VERSION);
                     result.setTypeDesc("获取硬件版本");
                     if (rc == 0x01) {
                         result.setResult(true);
-                        byte[] body = new byte[buffer.length - 7];
+                        byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
-                        result.setDesc("硬件版本：" + byteBuffer2String(bf));
+                        result.setDesc("硬件版本：" +  ByteUtils.byteToHexString(body));
                     } else {
                         result.setResult(false);
                         result.setDesc("获取硬件版本失败");
                     }
-                }else if(ry == (byte) 0xA5){
+                } else if (ry == (byte) 0xA5) {
                     result.setType(CommandResult.CommandType.GET_PILE_SOFTWARE_VERSION);
                     result.setTypeDesc("获取软件版本");
                     if (rc == 0x01) {
                         result.setResult(true);
-                        byte[] body = new byte[buffer.length - 7];
+                        byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
-                        result.setDesc("软件版本：" + byteBuffer2String(bf));
+                        bf.flip();
+                        result.setDesc("软件版本：" +  ByteUtils.byteToHexString(body));
                     } else {
                         result.setResult(false);
                         result.setDesc("获取软件版本失败");
                     }
-                }else if(ry == (byte) 0xA6){
+                } else if (ry == (byte) 0xA6) {
                     result.setType(CommandResult.CommandType.GET_PILE_BOOTLOADER_VERSION);
                     result.setTypeDesc("获取bootloader软件版本");
                     if (rc == 0x01) {
                         result.setResult(true);
-                        byte[] body = new byte[buffer.length - 7];
+                        byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
-                        result.setDesc("bootloader软件版本：" + byteBuffer2String(bf));
+                        result.setDesc("bootloader软件版本：" +  ByteUtils.byteToHexString(body));
                     } else {
                         result.setResult(false);
                         result.setDesc("获取bootloader软件版本失败");

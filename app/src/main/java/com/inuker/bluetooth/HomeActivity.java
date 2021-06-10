@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.inuker.bluetooth.library.beacon.BluetoothDataParserImpl;
+import com.inuker.bluetooth.library.beacon.CommandResult;
+import com.inuker.bluetooth.library.utils.ByteUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import io.reactivex.functions.Consumer;
@@ -22,7 +25,13 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         getRxPermissions();
-
+//        test();
+    }
+    public  void test() {
+        String str = "640C11A1010755000000005555EF";
+        BluetoothDataParserImpl bluetoothDataParser = new BluetoothDataParserImpl(null);
+        CommandResult cr =  bluetoothDataParser.parseFromBytes(ByteUtils.hexToByteArray(str));
+        System.out.println("cr = "+ cr);
 
     }
 

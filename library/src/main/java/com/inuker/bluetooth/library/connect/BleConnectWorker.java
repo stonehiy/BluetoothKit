@@ -187,7 +187,7 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
                 status,
                 characteristic.getService().getUuid(),
                 characteristic.getUuid(),
-                ByteUtils.byteToString(value)));
+                ByteUtils.byteToHexString(value)));
 
         if (mGattResponseListener != null && mGattResponseListener instanceof ReadCharacterListener) {
             ((ReadCharacterListener) mGattResponseListener).onCharacteristicRead(characteristic, status, value);
@@ -204,7 +204,7 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
                 status,
                 characteristic.getService().getUuid(),
                 characteristic.getUuid(),
-                ByteUtils.byteToString(value)));
+                ByteUtils.byteToHexString(value)));
 
         if (mGattResponseListener != null && mGattResponseListener instanceof WriteCharacterListener) {
             ((WriteCharacterListener) mGattResponseListener).onCharacteristicWrite(characteristic, status, value);
@@ -217,7 +217,7 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
 
         BluetoothLog.v(String.format("onCharacteristicChanged for %s: value = %s, service = 0x%s, character = 0x%s",
                 mBluetoothDevice.getAddress(),
-                ByteUtils.byteToString(value),
+                ByteUtils.byteToHexString(value),
                 characteristic.getService().getUuid(),
                 characteristic.getUuid()));
 
@@ -444,7 +444,7 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
     @Override
     public boolean writeCharacteristic(UUID service, UUID character, byte[] value) {
         BluetoothLog.v(String.format("writeCharacteristic for %s: service = 0x%s, character = 0x%s, value = 0x%s",
-                mBluetoothDevice.getAddress(), service, character, ByteUtils.byteToString(value)));
+                mBluetoothDevice.getAddress(), service, character, ByteUtils.byteToHexString(value)));
 
         checkRuntime();
 
@@ -511,7 +511,7 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
     @Override
     public boolean writeDescriptor(UUID service, UUID character, UUID descriptor, byte[] value) {
         BluetoothLog.v(String.format("writeDescriptor for %s: service = 0x%s, character = 0x%s, descriptor = 0x%s, value = 0x%s",
-                mBluetoothDevice.getAddress(), service, character, descriptor, ByteUtils.byteToString(value)));
+                mBluetoothDevice.getAddress(), service, character, descriptor, ByteUtils.byteToHexString(value)));
 
         checkRuntime();
 
@@ -546,7 +546,7 @@ public class BleConnectWorker implements Handler.Callback, IBleConnectWorker, IB
     @Override
     public boolean writeCharacteristicWithNoRsp(UUID service, UUID character, byte[] value) {
         BluetoothLog.v(String.format("writeCharacteristicWithNoRsp for %s: service = 0x%s, character = 0x%s, value = 0x%s",
-                mBluetoothDevice.getAddress(), service, character, ByteUtils.byteToString(value)));
+                mBluetoothDevice.getAddress(), service, character, ByteUtils.byteToHexString(value)));
 
         checkRuntime();
 

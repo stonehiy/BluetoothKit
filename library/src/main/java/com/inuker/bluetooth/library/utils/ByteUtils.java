@@ -1,5 +1,6 @@
 package com.inuker.bluetooth.library.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
@@ -16,6 +17,20 @@ public class ByteUtils {
     }
 
     public static String byteToString(byte[] bytes) {
+        if (null == bytes || bytes.length == 0) {
+            return "";
+        }
+        String strContent = "";
+        try {
+            strContent = new String(bytes,"UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return strContent;
+    }
+
+
+    public static String byteToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
 
         if (!isEmpty(bytes)) {
@@ -29,7 +44,7 @@ public class ByteUtils {
 
     public static byte[] trimLast(byte[] bytes) {
         int i = bytes.length - 1;
-        for ( ; i >= 0; i--) {
+        for (; i >= 0; i--) {
             if (bytes[i] != 0) {
                 break;
             }
@@ -37,7 +52,7 @@ public class ByteUtils {
         return Arrays.copyOfRange(bytes, 0, i + 1);
     }
 
-    public static byte[] stringToBytes(String text) {
+    public static byte[] hexStringToBytes(String text) {
         int len = text.length();
         byte[] bytes = new byte[(len + 1) / 2];
         for (int i = 0; i < len; i += 2) {
@@ -225,8 +240,65 @@ public class ByteUtils {
     }
 
     public static byte[] fromShort(short n) {
-        return new byte[] {
+        return new byte[]{
                 (byte) n, (byte) (n >>> 8)
         };
     }
+
+
+    /**
+     * 字节数组转16进制
+     *
+     * @param bytes 需要转换的byte数组
+     * @return 转换后的Hex字符串
+     */
+    public static String bytesToHex(byte[] bytes) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < bytes.length; i++) {
+            String hex = Integer.toHexString(bytes[i] & 0xFF);
+            if (hex.length() < 2) {
+                sb.append(0);
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * hex字符串转byte数组
+     *
+     * @param inHex 待转换的Hex字符串
+     * @return 转换后的byte数组结果
+     */
+    public static byte[] hexToByteArray(String inHex) {
+        int hexlen = inHex.length();
+        byte[] result;
+        if (hexlen % 2 == 1) {
+            //奇数
+            hexlen++;
+            result = new byte[(hexlen / 2)];
+            inHex = "0" + inHex;
+        } else {
+            //偶数
+            result = new byte[(hexlen / 2)];
+        }
+        int j = 0;
+        for (int i = 0; i < hexlen; i += 2) {
+            result[j] = hexToByte(inHex.substring(i, i + 2));
+            j++;
+        }
+        return result;
+    }
+
+    /**
+     * Hex字符串转byte
+     *
+     * @param inHex 待转换的Hex字符串
+     * @return 转换后的byte
+     */
+    public static byte hexToByte(String inHex) {
+        return (byte) Integer.parseInt(inHex, 16);
+    }
+
+
 }

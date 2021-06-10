@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.response.BleMtuResponse;
@@ -84,7 +83,7 @@ public class CharacterActivity extends Activity implements View.OnClickListener 
         @Override
         public void onResponse(int code, byte[] data) {
             if (code == REQUEST_SUCCESS) {
-                mBtnRead.setText(String.format("read: %s", ByteUtils.byteToString(data)));
+                mBtnRead.setText(String.format("read: %s", ByteUtils.byteToHexString(data)));
                 CommonUtils.toast("success");
             } else {
                 CommonUtils.toast("failed");
@@ -108,7 +107,7 @@ public class CharacterActivity extends Activity implements View.OnClickListener 
         @Override
         public void onNotify(UUID service, UUID character, byte[] value) {
             if (service.equals(mService) && character.equals(mCharacter)) {
-                mBtnNotify.setText(String.format("%s", ByteUtils.byteToString(value)));
+                mBtnNotify.setText(String.format("%s", ByteUtils.byteToHexString(value)));
             }
         }
 
@@ -156,7 +155,7 @@ public class CharacterActivity extends Activity implements View.OnClickListener 
                 break;
             case R.id.write:
                 ClientManager.getClient().write(mMac, mService, mCharacter,
-                        ByteUtils.stringToBytes(mEtInput.getText().toString()), mWriteRsp);
+                        ByteUtils.hexStringToBytes(mEtInput.getText().toString()), mWriteRsp);
                 break;
             case R.id.notify:
                 ClientManager.getClient().notify(mMac, mService, mCharacter, mNotifyRsp);
