@@ -26,13 +26,21 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         getRxPermissions();
 //        test();
+//        test1();
     }
-    public  void test() {
+
+    public void test() {
         String str = "640C11A1010755000000005555EF";
         BluetoothDataParserImpl bluetoothDataParser = new BluetoothDataParserImpl(null);
-        CommandResult cr =  bluetoothDataParser.parseFromBytes(ByteUtils.hexToByteArray(str));
-        System.out.println("cr = "+ cr);
+        CommandResult cr = bluetoothDataParser.parseFromBytes(ByteUtils.hexToByteArray(str));
+        System.out.println("cr = " + cr);
 
+    }
+
+    public void test1() {
+        String str = "1B58";
+        String s = ByteUtils.byteToString(ByteUtils.hexToByteArray(str));
+        System.out.println("test1 s = " + s);
     }
 
     public void clickApi(View view) {

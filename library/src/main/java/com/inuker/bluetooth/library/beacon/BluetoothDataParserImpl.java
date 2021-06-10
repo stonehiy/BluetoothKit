@@ -269,7 +269,12 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
                         result.setResult(true);
                         byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
-                        result.setDesc("桩供应商信息：" +  ByteUtils.byteToHexString(body));
+                        String bh = ByteUtils.byteToHexString(body);
+                        String st = "";
+                        if ("01".equals(bh)) {
+                            st = "巴斯巴";
+                        }
+                        result.setDesc("桩供应商信息：" + st);
                     } else {
                         result.setResult(false);
                         result.setDesc("获取桩供应商信息失败");
@@ -281,7 +286,8 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
                         result.setResult(true);
                         byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
-                        result.setDesc("额定功率：" +  ByteUtils.byteToHexString(body));
+                        String bh = ByteUtils.byteToHexString(body);
+                        result.setDesc("额定功率：" + Integer.parseInt(bh, 16) + "W");
                     } else {
                         result.setResult(false);
                         result.setDesc("获取额定功率失败");
@@ -293,7 +299,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
                         result.setResult(true);
                         byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
-                        result.setDesc("硬件版本：" +  ByteUtils.byteToHexString(body));
+                        result.setDesc("硬件版本：" + "V" + ByteUtils.byteToHexString(body));
                     } else {
                         result.setResult(false);
                         result.setDesc("获取硬件版本失败");
@@ -306,7 +312,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
                         byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
                         bf.flip();
-                        result.setDesc("软件版本：" +  ByteUtils.byteToHexString(body));
+                        result.setDesc("软件版本：" + "V" + ByteUtils.byteToHexString(body));
                     } else {
                         result.setResult(false);
                         result.setDesc("获取软件版本失败");
@@ -318,7 +324,7 @@ public class BluetoothDataParserImpl implements BluetoothDataParser {
                         result.setResult(true);
                         byte[] body = new byte[buffer.length - 6];
                         ByteBuffer bf = bb.get(body, 0, body.length);
-                        result.setDesc("bootloader软件版本：" +  ByteUtils.byteToHexString(body));
+                        result.setDesc("bootloader软件版本：" + "V" + ByteUtils.byteToHexString(body));
                     } else {
                         result.setResult(false);
                         result.setDesc("获取bootloader软件版本失败");
